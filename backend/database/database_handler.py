@@ -11,4 +11,7 @@ def database_command(command):
     con.commit()
     con.close()
     
-    return json.dumps([dict(ix) for ix in raw_results]) 
+    return {
+        "data": [dict(ix) for ix in raw_results],
+        "status": "complete"
+    }
