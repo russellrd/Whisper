@@ -1,5 +1,5 @@
 from flask import Blueprint 
-from database_handler import database_command 
+from database.database_handler import database_command 
 
 announcement_bp = Blueprint("announcement", __name__, url_prefix="/announcement")
 
