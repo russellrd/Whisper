@@ -15,7 +15,7 @@ private const val TAG = "AnnouncementChannelViewModel"
 class AnnouncementChannelViewModel {
     private val _repositories: MutableState<AnnouncementChannelRepositories> = mutableStateOf(
         AnnouncementChannelRepositories(
-            announcementChannels = listOf()
+            data = listOf()
         )
     )
 
@@ -29,7 +29,7 @@ class AnnouncementChannelViewModel {
                 is Result.Failure -> {
                     val ex = result.getException()
                     if(ex.response.statusCode == 404){
-                        var tmp = AnnouncementChannelRepositories(announcementChannels = listOf())
+                        var tmp = AnnouncementChannelRepositories(data = listOf())
                         _repositories.value = tmp
                     }
                 }

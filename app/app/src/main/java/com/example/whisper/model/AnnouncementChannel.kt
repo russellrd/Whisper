@@ -11,5 +11,5 @@ data class AnnouncementChannel(
 
 @Serializable
 data class AnnouncementChannelRepositories(
-    val announcementChannels: List<AnnouncementChannel>
+    val data: List<AnnouncementChannel>
 )
