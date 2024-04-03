@@ -66,9 +66,9 @@ private fun AnnouncementChannelListPreview(
 
     data.value = AnnouncementChannelRepositories(
         data = listOf(
-            AnnouncementChannel(0, "Cool Page", "Wawdawd"),
-            AnnouncementChannel(1, "Special", "WDAWDAWDWAWA"),
-            AnnouncementChannel(2, "Tuvok's Words-o-Wisdom", "Awdawd")
+            AnnouncementChannel("0", "Cool Page", "Wawdawd"),
+            AnnouncementChannel("1", "Special", "WDAWDAWDWAWA"),
+            AnnouncementChannel("2", "Tuvok's Words-o-Wisdom", "Awdawd")
         )
     )
 

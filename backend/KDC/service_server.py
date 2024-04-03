@@ -17,7 +17,7 @@ class SSResponse:
 
 @dataclass
 class ServiceAuth:
-    serviceId: int
+    serviceId: str
     timestamp: datetime
 
 class ServiceServer:

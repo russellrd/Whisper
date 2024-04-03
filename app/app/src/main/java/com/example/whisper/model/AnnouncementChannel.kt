@@ -4,13 +4,12 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class AnnouncementChannel(
-    var a_id: Int = 0,
+    var id: String = "",
     var title: String = "",
     var department: String = ""
 )
 
 @Serializable
 data class AnnouncementChannelRepositories(
-    val data: List<AnnouncementChannel>,
-    val status: String = ""
+    val data: List<AnnouncementChannel>
 )

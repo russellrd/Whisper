@@ -13,7 +13,7 @@ class KDC_DB:
     
     @staticmethod
     def check_service_exists(id: str):
-        service = database_command(f"SELECT * FROM TICKET_GRANTING_SERVER WHERE serviceId = '{id}'")
+        service = database_command(f"SELECT * FROM TICKET_GRANTING_SERVER WHERE service_id = '{id}'")
         if len(service) == 0:
             return False
         return True
@@ -64,10 +64,10 @@ class KDC_DB:
         return service_session_key["data"][0]["service_session_key"]
     
     @staticmethod
-    def check_user_authorized_for_service(id: str, serviceId: int):
+    def check_user_authorized_for_service(id: str, serviceId: str):
         client = database_command(f"SELECT * FROM AUTHENTICATION_SERVER WHERE id = '{id}'")
         if len(client) == 0:
             return False
-        if int(client["data"][0]["role"]) < serviceId:
+        if int(client["data"][0]["role"]) < int(serviceId):
             return False
         return True

@@ -15,7 +15,7 @@ class ASRequest(BaseModel):
 
 @dataclass
 class ASResponse:
-    tgsId: int
+    tgsId: str
     timestamp: datetime
     lifetime: datetime
     tgsSessionKey: str
@@ -23,7 +23,7 @@ class ASResponse:
 @dataclass
 class TicketGrantingTicket:
     id: str
-    tgsId: int
+    tgsId: str
     timestamp: datetime
     ip: str
     lifetime: datetime
@@ -49,7 +49,7 @@ class AuthenticationServer():
         
         # Create the AS response
         AS_response = ASResponse(
-            1, # TODO: Use actual id
+            "1", # TODO: Use actual id
             datetime.now(timezone.utc),
             AS_request.desiredLifetime,
             tgs_session_key
@@ -65,7 +65,7 @@ class AuthenticationServer():
         # Create the TGT
         TGT = TicketGrantingTicket(
             AS_request.id,
-            1, # TODO: Use actual id
+            "1", # TODO: Use actual id
             datetime.now(timezone.utc),
             AS_request.ip,
             datetime.now(timezone.utc)+timedelta(hours=1),

@@ -10,14 +10,14 @@ from database.kdc_db import KDC_DB
 MAX_LIFETIME_HOURS = 2
 
 class TGSRequest(BaseModel):
-    serviceId: int
+    serviceId: str
     desiredLifetime: datetime
     userAuth: str
     tgt: str
 
 @dataclass
 class TGSResponse:
-    serviceId: int
+    serviceId: str
     timestamp: datetime
     lifetime: datetime
     serviceSessionKey: str
@@ -29,7 +29,7 @@ class UserAuth(BaseModel):
 @dataclass
 class ServiceTicket:
     id: str
-    serviceId: int
+    serviceId: str
     timestamp: datetime
     ip: str
     lifetime: datetime

@@ -17,7 +17,7 @@ data class ASRequest(
 
 @Serializable
 data class ASResponse(
-    var tgsId: Int = 0,
+    var tgsId: String = "",
     var timestamp: String = "",
     var lifetime: String = "",
     var tgsSessionKey: String = ""
@@ -43,7 +43,7 @@ data class AuthRepository(
 
 @Serializable
 data class TGSRequest(
-    var serviceId: Int = 0,
+    var serviceId: String = "",
     var desiredLifetime: String = "",
     val userAuth: String = "",
     val tgt: String = ""
@@ -51,7 +51,7 @@ data class TGSRequest(
 
 @Serializable
 data class TGSResponse(
-    var serviceId: Int = 0,
+    var serviceId: String = "",
     var timestamp: String = "",
     var lifetime: String = "",
     var serviceSessionKey: String = ""
@@ -76,6 +76,6 @@ data class SSEncryptedResponse(
 
 @Serializable
 data class ServiceAuth(
-    var serviceId: Int = 0,
+    var serviceId: String = "",
     var timestamp: String = ""
 )

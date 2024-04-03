@@ -71,7 +71,7 @@ class CryptoSystem {
             val userAuthString = CryptoSystem.encryptJSON(userAuthJSON, auth.tgsSessionKey)
 
             val tgsRequest = TGSRequest(
-                role.value,
+                role.value.toString(),
                 ZonedDateTime.now().plusHours(1).format(DateTimeFormatter.ISO_INSTANT),
                 userAuthString,
                 auth.tgt
@@ -129,7 +129,7 @@ class CryptoSystem {
                                     val encryptedResponse = Json.decodeFromString<SSEncryptedResponse>(result.get().obj().toString())
                                     val serviceAuthJSON = decryptJSON(encryptedResponse.serviceAuth, tgsResponse.serviceSessionKey)
                                     val serviceAuth = Json.decodeFromString<ServiceAuth>(serviceAuthJSON)
-                                    Log.d(TAG, serviceAuth.serviceId.toString())
+                                    Log.d(TAG, serviceAuth.serviceId)
                                 }
                             }
                         }
