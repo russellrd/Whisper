@@ -29,7 +29,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.whisper.model.AnnouncementChannel
 import com.example.whisper.model.AnnouncementChannelRepositories
+import com.example.whisper.model.UserAuth
 import com.example.whisper.view_model.AnnouncementChannelViewModel
+import com.example.whisper.view_model.AuthState
 
 @Composable
 fun AnnouncementChannelList(
@@ -37,9 +39,9 @@ fun AnnouncementChannelList(
     modifier: Modifier = Modifier
 ) {
     val value by remember { viewModel.repositories }
-
+    val p = AuthState.current.auth
     LaunchedEffect(key1 = Unit) {
-        viewModel.getAnnouncementChannels()
+        viewModel.getAnnouncementChannels(p)
     }
 
     AnnouncementChannelListBody(
@@ -58,15 +60,15 @@ private fun AnnouncementChannelListPreview(
     val data: MutableState<AnnouncementChannelRepositories> =
     mutableStateOf(
         AnnouncementChannelRepositories(
-            announcementChannels = listOf()
+            data = listOf()
         )
     )
 
     data.value = AnnouncementChannelRepositories(
-        announcementChannels = listOf(
-            AnnouncementChannel("c0651fd6-9433-42de-8a44-d5bc9b3ff06e", "Cool Page", "Wawdawd"),
-            AnnouncementChannel("ce358139-7ab3-4a35-a30e-0950f8a7ad8f", "Special", "WDAWDAWDWAWA"),
-            AnnouncementChannel("d12561cf-a2b6-4184-be31-d4d44055a47e", "Tuvok's Words-o-Wisdom", "Awdawd")
+        data = listOf(
+            AnnouncementChannel(0, "Cool Page", "Wawdawd"),
+            AnnouncementChannel(1, "Special", "WDAWDAWDWAWA"),
+            AnnouncementChannel(2, "Tuvok's Words-o-Wisdom", "Awdawd")
         )
     )
 
@@ -87,7 +89,7 @@ private fun AnnouncementChannelListBody(
         modifier = modifier.padding(bottom = 16.dp)
     ){
         LazyColumn(){
-            items(value.announcementChannels) { announcementChannel: AnnouncementChannel ->
+            items(value.data) { announcementChannel: AnnouncementChannel ->
                 Card(
                     modifier = modifier
                         .fillMaxWidth()

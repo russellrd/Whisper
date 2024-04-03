@@ -1,5 +1,4 @@
 import sqlite3
-import json
 import os
 
 # Whisper Database 
@@ -13,5 +12,5 @@ def database_command(command):
     
     return {
         "data": [dict(ix) for ix in raw_results],
-        "status": "complete"
+        "status": "success"
     }
