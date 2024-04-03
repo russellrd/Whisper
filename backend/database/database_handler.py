@@ -11,6 +11,5 @@ def database_command(command):
     con.close()
     
     return {
-        "data": [dict(ix) for ix in raw_results],
-        "status": "success"
+        "data": [dict(i) for i in raw_results]
     }
