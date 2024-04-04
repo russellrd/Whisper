@@ -8,10 +8,13 @@ import com.example.whisper.ui.routes.MessagesRoute
 
 const val MESSAGES_ROUTE = "messages_route"
 
-fun NavController.navigateToMessages(navOptions: NavOptions) = navigate(MESSAGES_ROUTE, navOptions)
 
+fun NavController.navigateToMessages(navOptions: NavOptions) = navigate(MESSAGES_ROUTE, navOptions)
 fun NavGraphBuilder.messagesScreen() {
     composable(route = MESSAGES_ROUTE) {
         MessagesRoute()
     }
 }
+
+
+

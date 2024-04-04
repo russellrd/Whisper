@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
@@ -14,6 +16,10 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.Button
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.TextField
+import androidx.compose.runtime.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
@@ -27,6 +33,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.example.whisper.model.MessageChannel
 import com.example.whisper.model.MessageChannelRepositories
 import com.example.whisper.view_model.MessageChannelViewModel
@@ -72,6 +79,7 @@ private fun MessageChannelListPreview(
 
     val value by remember { data }
 
+
     MessageChannelListBody(
         value = value,
         modifier = modifier
@@ -84,7 +92,9 @@ private fun MessageChannelListBody(
     modifier: Modifier = Modifier
 ) {
     Box(
-        modifier = modifier.padding(bottom = 16.dp)
+        modifier = modifier
+            .padding(bottom = 16.dp)
+            .fillMaxSize()
     ){
         LazyColumn(){
             items(value.data) { messageChannel: MessageChannel ->
@@ -125,6 +135,61 @@ private fun MessageChannelListBody(
                     }
                 }
             }
+        }
+        NewChatButton()
+
+    }
+}
+
+@Composable
+fun NewChatButton(modifier: Modifier = Modifier) {
+    var showDialog by remember { mutableStateOf(false) }
+    var nameSearch by remember { mutableStateOf("") }
+
+    Box(
+        modifier = modifier
+            .padding(bottom = 16.dp)
+            .fillMaxSize()
+    ) {
+        Button(
+            onClick = {
+                showDialog = true
+            },
+            modifier = Modifier.align(Alignment.BottomEnd)
+                .padding(16.dp),
+            contentPadding = PaddingValues(all = 25.dp)
+        ) {
+            Text("New Chat")
+        }
+
+        if (showDialog) {
+            AlertDialog(
+                onDismissRequest = { showDialog = false },
+                title = { Text("New Chat") },
+                text = {
+                    TextField(
+                        value = nameSearch,
+                        onValueChange = { nameSearch = it },
+                        label = { Text("Enter Name") }
+                    )
+                },
+                confirmButton = {
+                    Button(
+                        onClick = {
+                            //figure out how to handle
+                            showDialog = false // Close after confirmation
+
+                        }
+                    ) {
+                        Text("Confirm")
+                    }
+                },
+                dismissButton = {
+                    Button(onClick = { showDialog = false }) {
+                        Text("Cancel")
+                    }
+                }
+            )
         }
     }
 }

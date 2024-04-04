@@ -9,6 +9,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.whisper.ui.view.MessageChannelList
 
+
+
 @Composable
 fun MessagesRoute(
     modifier: Modifier = Modifier
@@ -25,5 +27,7 @@ fun MessagesScreen(
     ) {
         MessageChannelList(modifier = modifier)
     }
+
 }
+
 
