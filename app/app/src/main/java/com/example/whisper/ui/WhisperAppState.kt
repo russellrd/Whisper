@@ -46,7 +46,7 @@ class WhisperAppState(
         @Composable get() = navController
             .currentBackStackEntryAsState().value?.destination
 
-    val currentTopLevelDestination: TabDestination?
+    val currentTabDestination: TabDestination?
         @Composable get() = when (currentDestination?.route) {
             MESSAGES_ROUTE -> TabDestination.MESSAGES
             ANNOUNCEMENTS_ROUTE -> TabDestination.ANNOUNCEMENTS
@@ -54,9 +54,9 @@ class WhisperAppState(
             else -> null
         }
 
-    val topLevelDestinations: List<TabDestination> = TabDestination.entries
+    val tabDestinations: List<TabDestination> = TabDestination.entries
 
-    fun navigateToTopLevelDestination(topLevelDestination: TabDestination) {
+    fun navigateToTabDestination(topLevelDestination: TabDestination) {
         val topLevelNavOptions = navOptions {
             // Pop up to the start destination of the graph to
             // avoid building up a large stack of destinations
