@@ -40,6 +40,7 @@ fun AnnouncementChannelList(
 ) {
     val value by remember { viewModel.repositories }
     val p = AuthState.current.auth
+
     LaunchedEffect(key1 = Unit) {
         viewModel.getAnnouncementChannels(p)
     }
@@ -54,7 +55,6 @@ fun AnnouncementChannelList(
 @Composable
 @Preview
 private fun AnnouncementChannelListPreview(
-    viewModel: AnnouncementChannelViewModel = AnnouncementChannelViewModel(),
     modifier: Modifier = Modifier
 ) {
     val data: MutableState<AnnouncementChannelRepositories> =

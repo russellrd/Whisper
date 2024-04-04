@@ -34,6 +34,7 @@ import com.example.whisper.view_model.MessageChannelViewModel
 @Composable
 fun MessageChannelList(
     viewModel: MessageChannelViewModel = MessageChannelViewModel(),
+    navigateToDM: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val value by remember { viewModel.repositories }
@@ -42,47 +43,6 @@ fun MessageChannelList(
         viewModel.getMessageChannels()
     }
 
-    MessageChannelListBody(
-        value = value,
-        modifier = modifier
-    )
-}
-
-@SuppressLint("UnrememberedMutableState")
-@Composable
-@Preview
-private fun MessageChannelListPreview(
-    viewModel: MessageChannelViewModel = MessageChannelViewModel(),
-    modifier: Modifier = Modifier
-) {
-    val data: MutableState<MessageChannelRepositories> =
-        mutableStateOf(
-            MessageChannelRepositories(
-                data = listOf()
-            )
-        )
-
-    data.value = MessageChannelRepositories(
-        data = listOf(
-            MessageChannel("c0651fd6-9433-42de-8a44-d5bc9b3ff06e", "Person1", "Person2"),
-            MessageChannel("ce358139-7ab3-4a35-a30e-0950f8a7ad8f", "Person2", "Person3"),
-            MessageChannel("d12561cf-a2b6-4184-be31-d4d44055a47e", "Person3", "Person1")
-        )
-    )
-
-    val value by remember { data }
-
-    MessageChannelListBody(
-        value = value,
-        modifier = modifier
-    )
-}
-
-@Composable
-private fun MessageChannelListBody(
-    value: MessageChannelRepositories,
-    modifier: Modifier = Modifier
-) {
     Box(
         modifier = modifier.padding(bottom = 16.dp)
     ){
@@ -95,7 +55,7 @@ private fun MessageChannelListBody(
                         .clickable(
                             role = Role.Checkbox,
                             onClick = {
-                                //TODO: Add event
+                                navigateToDM("3")
                             }
                         ),
                     elevation = CardDefaults.cardElevation(
@@ -128,3 +88,33 @@ private fun MessageChannelListBody(
         }
     }
 }
+
+//@SuppressLint("UnrememberedMutableState")
+//@Composable
+//private fun MessageChannelListPreview(
+//    navigateToDM: () -> Unit,
+//    modifier: Modifier = Modifier
+//) {
+//    val data: MutableState<MessageChannelRepositories> =
+//        mutableStateOf(
+//            MessageChannelRepositories(
+//                data = listOf()
+//            )
+//        )
+//
+//    data.value = MessageChannelRepositories(
+//        data = listOf(
+//            MessageChannel("c0651fd6-9433-42de-8a44-d5bc9b3ff06e", "Person1", "Person2"),
+//            MessageChannel("ce358139-7ab3-4a35-a30e-0950f8a7ad8f", "Person2", "Person3"),
+//            MessageChannel("d12561cf-a2b6-4184-be31-d4d44055a47e", "Person3", "Person1")
+//        )
+//    )
+//
+//    val value by remember { data }
+//
+//    MessageChannelListBody(
+//        value = value,
+//        modifier = modifier,
+//        navigateToDM = navigateToDM
+//    )
+//}

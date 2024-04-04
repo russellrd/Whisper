@@ -2,6 +2,7 @@ package com.example.whisper.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavOptions
 import androidx.navigation.compose.NavHost
 import com.example.whisper.ui.WhisperAppState
 
@@ -17,7 +18,10 @@ fun WhisperNavHost(
         startDestination = startDestination,
         modifier = modifier,
     ) {
-        messagesScreen()
+        messagesScreen(
+            navigateToDM = navController::navigateToDirectMessages
+        )
+        directMessagesScreen()
         announcementsScreen()
         settingsScreen()
     }

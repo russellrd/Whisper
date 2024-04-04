@@ -11,19 +11,27 @@ import com.example.whisper.ui.view.MessageChannelList
 
 @Composable
 fun MessagesRoute(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navigateToDM: (String) -> Unit
 ) {
-    MessagesScreen(modifier = modifier)
+    MessagesScreen(
+        modifier = modifier,
+        navigateToDM = navigateToDM
+    )
 }
 
 @Composable
 fun MessagesScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navigateToDM: (String) -> Unit
 ) {
     Box(
         modifier = modifier.fillMaxSize().padding(10.dp)
     ) {
-        MessageChannelList(modifier = modifier)
+        MessageChannelList(
+            modifier = modifier,
+            navigateToDM = navigateToDM
+        )
     }
 }
 

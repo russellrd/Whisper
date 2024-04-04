@@ -10,8 +10,12 @@ const val MESSAGES_ROUTE = "messages_route"
 
 fun NavController.navigateToMessages(navOptions: NavOptions) = navigate(MESSAGES_ROUTE, navOptions)
 
-fun NavGraphBuilder.messagesScreen() {
+fun NavGraphBuilder.messagesScreen(
+    navigateToDM: (String) -> Unit
+) {
     composable(route = MESSAGES_ROUTE) {
-        MessagesRoute()
+        MessagesRoute(
+            navigateToDM = navigateToDM
+        )
     }
 }

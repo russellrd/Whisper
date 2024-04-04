@@ -1,5 +1,6 @@
 package com.example.whisper.ui.view
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -72,7 +73,7 @@ fun Login(
 
             Spacer(modifier = Modifier.height(15.dp))
 
-            Box(modifier = Modifier.padding(50.dp, 0.dp)) {
+            Box(modifier = Modifier.padding(60.dp, 0.dp)) {
                 Button(
                     onClick = {authState.login(username.value.text, password.value.text)},
                     modifier = Modifier
@@ -82,6 +83,8 @@ fun Login(
                     Text(text = "Login")
                 }
             }
+
+//            Toast.makeText(context, "Incorrect Username/Password", Toast.LENGTH_SHORT).show()
         }
     }
 }

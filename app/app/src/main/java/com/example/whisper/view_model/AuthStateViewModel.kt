@@ -65,6 +65,10 @@ class AuthStateViewModel : ViewModel(){
             }
         }
     }
+
+    fun logout() {
+        // TODO: Implement logout
+    }
 }
 
 val AuthState = compositionLocalOf<AuthStateViewModel> { error("No User Auth Context") }
