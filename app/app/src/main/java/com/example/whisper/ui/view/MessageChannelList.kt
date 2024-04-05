@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.whisper.model.MessageChannel
 import com.example.whisper.model.MessageChannelRepositories
+import com.example.whisper.view_model.AuthState
 import com.example.whisper.view_model.MessageChannelViewModel
 
 @Composable
@@ -45,9 +46,10 @@ fun MessageChannelList(
     modifier: Modifier = Modifier
 ) {
     val value by remember { viewModel.repositories }
+    val auth = AuthState.current.auth
 
     LaunchedEffect(key1 = Unit) {
-        viewModel.getMessageChannels()
+        viewModel.getMessageChannels(auth = auth)
     }
 
     Box(
