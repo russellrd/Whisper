@@ -64,7 +64,7 @@ fun MessageChannelList(
                         .clickable(
                             role = Role.Checkbox,
                             onClick = {
-                                navigateToDM("3")
+                                navigateToDM(messageChannel.user2)
                             }
                         ),
                     elevation = CardDefaults.cardElevation(
@@ -135,7 +135,8 @@ fun NewChatButton(modifier: Modifier = Modifier) {
                 confirmButton = {
                     Button(
                         onClick = {
-                            //figure out how to handle
+                            //navigate to
+                            
                             showDialog = false // Close after confirmation
 
                         }
