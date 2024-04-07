@@ -13,3 +13,8 @@ data class AnnouncementChannel(
 data class AnnouncementChannelRepositories(
     val data: List<AnnouncementChannel>
 )
+
+@Serializable
+data class CreateAnnouncementChannel(
+    val title: String = ""
+)

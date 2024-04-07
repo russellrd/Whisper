@@ -22,7 +22,11 @@ fun WhisperNavHost(
             navigateToDM = navController::navigateToDirectMessages
         )
         directMessagesScreen()
-        announcementsScreen()
+        announcementsScreen(
+            navigateToManageSubscriptions = navController::navigateToManageSubscriptions
+            //navigateToAnnouncements = navController::navigateToAnnouncements
+        )
+        manageSubscriptionsScreen()
         settingsScreen()
     }
 }

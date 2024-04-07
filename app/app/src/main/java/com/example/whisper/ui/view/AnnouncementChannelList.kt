@@ -42,6 +42,7 @@ import com.example.whisper.view_model.AuthState
 @Composable
 fun AnnouncementChannelList(
     viewModel: AnnouncementChannelViewModel = AnnouncementChannelViewModel(),
+    navigateToAnnouncement: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val value by remember { viewModel.repositories }
@@ -53,14 +54,15 @@ fun AnnouncementChannelList(
 
     AnnouncementChannelListBody(
         value = value,
+        navigateToAnnouncement() = navigateToAnnouncement,
         modifier = modifier
     )
-    NewAnnouncementPageButton()
+    NewAnnouncementPageButton(viewModel)
     ManageSubscriptionButton()
 }
 
 @Composable
-fun NewAnnouncementPageButton(modifier: Modifier = Modifier) {
+fun NewAnnouncementPageButton(viewModel: AnnouncementChannelViewModel, modifier: Modifier = Modifier) {
     var showDialog by remember { mutableStateOf(false) }
     var nameSearch by remember { mutableStateOf("") }
 
@@ -95,7 +97,7 @@ fun NewAnnouncementPageButton(modifier: Modifier = Modifier) {
                 confirmButton = {
                     Button(
                         onClick = {
-                            //figure out how to handle
+                            viewModel.createAnnouncementChannel(nameSearch)
                             showDialog = false // Close after confirmation
 
                         }
@@ -115,7 +117,6 @@ fun NewAnnouncementPageButton(modifier: Modifier = Modifier) {
 
 @Composable
 fun ManageSubscriptionButton(modifier: Modifier = Modifier) {
-    var showDialog by remember { mutableStateOf(false) }
     var nameSearch by remember { mutableStateOf("") }
 
     Box(
@@ -125,7 +126,7 @@ fun ManageSubscriptionButton(modifier: Modifier = Modifier) {
     ) {
         Button(
             onClick = {
-                showDialog = true
+                //
             },
             modifier = Modifier
                 .align(Alignment.BottomEnd)
@@ -133,36 +134,6 @@ fun ManageSubscriptionButton(modifier: Modifier = Modifier) {
             contentPadding = PaddingValues(all = 25.dp)
         ) {
             Text("Manage Subscriptions")
-        }
-
-        if (showDialog) {
-            AlertDialog(
-                onDismissRequest = { showDialog = false },
-                title = { Text("Manage Subscriptions") },
-                text = {
-                    TextField(
-                        value = nameSearch,
-                        onValueChange = { nameSearch = it },
-                        label = { Text("Enter Channel Name") }
-                    )
-                },
-                confirmButton = {
-                    Button(
-                        onClick = {
-                            //figure out how to handle
-                            showDialog = false // Close after confirmation
-
-                        }
-                    ) {
-                        Text("Confirm")
-                    }
-                },
-                dismissButton = {
-                    Button(onClick = { showDialog = false }) {
-                        Text("Cancel")
-                    }
-                }
-            )
         }
     }
 }
@@ -198,6 +169,7 @@ private fun AnnouncementChannelListPreview(
 
     AnnouncementChannelListBody(
         value = value,
+        navigateToAnnouncement = navigateToAnnouncement,
         modifier = modifier
     )
 }
@@ -205,6 +177,7 @@ private fun AnnouncementChannelListPreview(
 @Composable
 private fun AnnouncementChannelListBody(
     value: AnnouncementChannelRepositories,
+    navigateToAnnouncement: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -219,7 +192,7 @@ private fun AnnouncementChannelListBody(
                         .clickable(
                             role = Role.Checkbox,
                             onClick = {
-                                //TODO: Add event
+                                navigateToAnnouncement(announcementChannel)
                             }
                         ),
                     elevation = CardDefaults.cardElevation(
