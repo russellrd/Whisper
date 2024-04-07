@@ -23,7 +23,7 @@ class AnnouncementChannelViewModel {
 
     fun getAnnouncementChannels() {
         val header: HashMap<String, String> = hashMapOf()
-        Fuel.get("http://10.0.2.2:4321/announcement/getAll").header(header).responseJson{ _, _, result ->
+        Fuel.get("http://10.0.2.2:4321/announcementChannel/getAll").header(header).responseJson{ _, _, result ->
             Log.d(TAG, result.toString())
             when(result){
                 is Result.Failure -> {

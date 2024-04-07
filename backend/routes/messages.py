@@ -1,46 +1,41 @@
 from flask import Blueprint, request
 from database.database_handler import database_command 
+from KDC.kdc_utils import MessageEncryption
+import time
 
 message_bp = Blueprint("message", __name__, url_prefix="/message")
 
-# This should be user admin AUTHENTICATION_SERVER only 
-@message_bp.route("/getAll", methods=["GET"])
-def get_all_message_channels():    
-    return database_command("""SELECT MESSAGE_CHANNELS.id as id, p1.name as user1, p2.name as user2
-FROM MESSAGE_CHANNELS 
-INNER JOIN AUTHENTICATION_SERVER p1 ON p1.id = MESSAGE_CHANNELS.user1 
-INNER JOIN AUTHENTICATION_SERVER p2 ON p2.id = MESSAGE_CHANNELS.user2;""")
+# Send a message to another use 
+@message_bp.route("/sendMessage", methods=["POST"])
+def send_message():
+    sender = request.args.get("sender")
+    receiver = request.args.get("receiver")
+    message_channel = request.args.get("channel")
+    timestamp = str(time.time())
+    message = request.args.get("message")
+    id = timestamp
+    
+    # Get the message channel session key 
+    query = database_command(f"SELECT channel_key FROM MESSAGE_CHANNELS WHERE id = '{message_channel}';")
+    encryption_key = query['data'][0]['channel_key']
+    
+    # Encrypt the message 
+    encrypted_message = MessageEncryption.encrypt(encryption_key, message)
+    
+    return database_command(f"""INSERT INTO MESSAGES(id, message_channel, sender, receiver, timestamp, message) VALUES ("{id}", "1", "{sender}", "{receiver}", "{timestamp}", "{encrypted_message}");""") 
 
-# Get's all current chats that you're apart of - Employee 
-@message_bp.route("/getCurrentChats", methods=["GET"])
+# Get's all current chat histroy for a specific chat 
+@message_bp.route("/getChatHistory", methods=["GET"])
 def get_user_message_channels():
-    user_id = request.args.get("id")
-    return database_command(f"""
-SELECT temp.id as id, p1.name as user1, p2.name as user2
-FROM (
-SELECT m.id as id, m.user1 as user1, m.user2 as user2
-FROM (SELECT * FROM MESSAGE_CHANNELS WHERE (MESSAGE_CHANNELS.user1 = "{user_id}")) as m
-INNER JOIN AUTHENTICATION_SERVER p1 ON p1.id = m.user1 
-INNER JOIN AUTHENTICATION_SERVER p2 ON p2.id = m.user2  
-UNION 
-SELECT m.id as id, m.user2 as user1, m.user1 as user2
-FROM (SELECT * FROM MESSAGE_CHANNELS WHERE (MESSAGE_CHANNELS.user2 = "{user_id}")) as m
-INNER JOIN AUTHENTICATION_SERVER p1 ON p1.id = m.user1 
-INNER JOIN AUTHENTICATION_SERVER p2 ON p2.id = m.user2) as temp
-INNER JOIN AUTHENTICATION_SERVER p1 ON p1.id = temp.user1 
-INNER JOIN AUTHENTICATION_SERVER p2 ON p2.id = temp.user2;
-""")
+    id = request.args.get("id")
+    all_messages =  database_command(f"SELECT * FROM MESSAGES WHERE message_channel = '{id}';")
     
-# Get all related AUTHENTICATION_SERVER based on search prompt 
-@message_bp.route("/getAUTHENTICATION_SERVERearch", methods=["GET"])
-def query_related_AUTHENTICATION_SERVER():
-    search = request.args.get("id")
+    # Get the channel encryption key 
+    query = database_command(f"SELECT channel_key FROM MESSAGE_CHANNELS WHERE id = {id};")
+    encryption_key = query['data'][0]['channel_key']
     
-    query = database_command(f"SELECT * FROM AUTHENTICATION_SERVER WHERE name LIKE '%{search}%';")
+    # Decrypt all the messages 
+    for element in all_messages['data']:
+        element['message'] = MessageEncryption.decrypt(encryption_key, element['message'])
     
-    # Sort through the query based on the location of the search index
-    query['data'].sort(key=lambda x: x["name"].find(search))
-    
-    # [Insert section for removing AUTHENTICATION_SERVER that outside of security range]
-    
-    return query
+    return all_messages
