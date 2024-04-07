@@ -1,6 +1,5 @@
 package com.example.whisper.ui.view
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,7 +21,6 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -30,26 +28,29 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.whisper.crypto.CryptoSystem
+import com.example.whisper.model.Auth
 import com.example.whisper.model.MessageChannel
-import com.example.whisper.model.MessageChannelRepositories
-import com.example.whisper.view_model.AuthState
+import com.example.whisper.view_model.AuthStateViewModel
 import com.example.whisper.view_model.MessageChannelViewModel
 
 @Composable
 fun MessageChannelList(
-    viewModel: MessageChannelViewModel = MessageChannelViewModel(),
+    mcViewModel: MessageChannelViewModel = MessageChannelViewModel(),
+    authViewModel: AuthStateViewModel = viewModel(),
     navigateToDM: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val value by remember { viewModel.repositories }
-    val auth = AuthState.current.auth
+    val value by remember { mcViewModel.repositories }
+    val auth: Auth by authViewModel.auth.collectAsStateWithLifecycle()
 
     LaunchedEffect(key1 = Unit) {
-        viewModel.getMessageChannels(auth = auth)
+        if(CryptoSystem.authenticate(auth, com.example.whisper.crypto.Role.USER, authViewModel::logout))
+            mcViewModel.getMessageChannels(auth = auth)
     }
 
     Box(
@@ -116,7 +117,8 @@ fun NewChatButton(modifier: Modifier = Modifier) {
             onClick = {
                 showDialog = true
             },
-            modifier = Modifier.align(Alignment.BottomEnd)
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
                 .padding(16.dp),
             contentPadding = PaddingValues(all = 25.dp)
         ) {
