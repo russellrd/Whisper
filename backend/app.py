@@ -1,4 +1,4 @@
-from flask import Flask 
+from flask import Flask
 
 # Import all Blueprints 
 from routes.announcement import announcement_channel_bp

@@ -1,4 +1,4 @@
-from flask import Blueprint 
+from flask import Blueprint, request
 from database.database_handler import database_command 
 
 announcement_channel_bp = Blueprint("announcementChannel", __name__, url_prefix="/announcementChannel")
@@ -6,3 +6,11 @@ announcement_channel_bp = Blueprint("announcementChannel", __name__, url_prefix=
 @announcement_channel_bp.route("/getAll", methods=["GET"])
 def get_all_announcements():
     return database_command("SELECT * FROM ANNOUNCEMENT_CHANNELS;")
+
+def get_user_annoucements():
+    user_id = request.args.get("id")
+    return database_command("""SELECT Ac.id, Ac.title, Ac.department 
+                            FROM ANNOUNCMENTS_SUBS As, ANNOUNCEMENT_CHANNELS Ac,
+                            WHERE {user_id} = As.userID
+                                AND As.annoucementID = Ac.id""")
+    
