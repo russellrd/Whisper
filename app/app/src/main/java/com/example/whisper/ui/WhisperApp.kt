@@ -27,6 +27,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import com.example.whisper.R
+import com.example.whisper.model.Auth
 import com.example.whisper.navigation.TabDestination
 import com.example.whisper.navigation.WhisperNavHost
 

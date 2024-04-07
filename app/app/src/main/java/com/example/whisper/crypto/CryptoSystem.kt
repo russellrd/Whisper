@@ -28,6 +28,8 @@ private const val TAG = "CryptoSystem"
 
 private const val IV_SIZE = 16
 
+private const val DESIRED_LIFETIME: Long = 1
+
 enum class Role(val value: Int) {
     USER(1),
     TEAMLEAD(2),
@@ -60,7 +62,7 @@ class CryptoSystem {
             return String(json, StandardCharsets.UTF_8)
         }
 
-        fun authenticate(auth: Auth, role: Role): Boolean {
+        fun authenticate(auth: Auth, role: Role, logout: () -> Unit): Boolean {
             val userAuth = UserAuth(
                 auth.id,
                 ZonedDateTime.now().format(DateTimeFormatter.ISO_INSTANT)
@@ -68,16 +70,14 @@ class CryptoSystem {
 
             // Encrypt UserAuth
             val userAuthJSON = Json.encodeToString(userAuth)
-            val userAuthString = CryptoSystem.encryptJSON(userAuthJSON, auth.tgsSessionKey)
+            val userAuthString = encryptJSON(userAuthJSON, auth.tgsSessionKey)
 
             val tgsRequest = TGSRequest(
                 role.value.toString(),
-                ZonedDateTime.now().plusHours(1).format(DateTimeFormatter.ISO_INSTANT),
+                ZonedDateTime.now().plusHours(DESIRED_LIFETIME).format(DateTimeFormatter.ISO_INSTANT),
                 userAuthString,
                 auth.tgt
             )
-
-            Log.d(TAG, ZonedDateTime.now().plusHours(1).format(DateTimeFormatter.ISO_INSTANT))
 
             val body = Json.encodeToString(tgsRequest)
             val header: HashMap<String, String> = hashMapOf("Content-Type" to "application/json")
@@ -87,51 +87,48 @@ class CryptoSystem {
                 when(result){
                     is Result.Failure -> {
                         val ex = result.getException()
-                        if(ex.response.statusCode == 404){
-                            // TODO: error handling
-                        }
                     }
 
                     is Result.Success -> {
-                        val encryptedResponse = Json.decodeFromString<TGSEncryptedResponse>(result.get().obj().toString())
-                        val tgsResponseJSON = decryptJSON(encryptedResponse.tgsResponse, auth.tgsSessionKey)
-                        val tgsResponse = Json.decodeFromString<TGSResponse>(tgsResponseJSON)
+                        try {
+                            val encryptedResponse = Json.decodeFromString<TGSEncryptedResponse>(result.get().obj().toString())
+                            val tgsResponseJSON = decryptJSON(encryptedResponse.tgsResponse, auth.tgsSessionKey)
+                            val tgsResponse = Json.decodeFromString<TGSResponse>(tgsResponseJSON)
 
-                        val userAuth = UserAuth(
-                            auth.id,
-                            ZonedDateTime.now().format(DateTimeFormatter.ISO_INSTANT)
-                        )
+                            val userAuth2 = UserAuth(
+                                auth.id,
+                                ZonedDateTime.now().format(DateTimeFormatter.ISO_INSTANT)
+                            )
 
-                        // Encrypt UserAuth
-                        val userAuthJSON = Json.encodeToString(userAuth)
-                        val userAuthString =
-                            CryptoSystem.encryptJSON(userAuthJSON, tgsResponse.serviceSessionKey)
+                            // Encrypt UserAuth
+                            val userAuthJSON2 = Json.encodeToString(userAuth2)
+                            val userAuthString2 = encryptJSON(userAuthJSON2, tgsResponse.serviceSessionKey)
 
-                        val ssRequest = SSRequest(
-                            userAuthString,
-                            encryptedResponse.st
-                        )
+                            val ssRequest = SSRequest(
+                                userAuthString2,
+                                encryptedResponse.st
+                            )
 
-                        val body = Json.encodeToString(ssRequest)
-                        val header: HashMap<String, String> = hashMapOf("Content-Type" to "application/json")
+                            val body2 = Json.encodeToString(ssRequest)
+                            val header2: HashMap<String, String> = hashMapOf("Content-Type" to "application/json")
 
-                        Fuel.post("http://10.0.2.2:4321/auth/ss").body(body).header(header).responseJson { _, _, result ->
-                            Log.d(TAG, result.toString())
-                            when (result) {
-                                is Result.Failure -> {
-                                    val ex = result.getException()
-                                    if (ex.response.statusCode == 404) {
-                                        // TODO: error handling
+                            Fuel.post("http://10.0.2.2:4321/auth/ss").body(body2).header(header2).responseJson { _, _, result ->
+                                Log.d(TAG, result.toString())
+                                when (result) {
+                                    is Result.Failure -> {
+                                        val ex = result.getException()
+                                    }
+
+                                    is Result.Success -> {
+                                        val encryptedResponse2 = Json.decodeFromString<SSEncryptedResponse>(result.get().obj().toString())
+                                        val serviceAuthJSON = decryptJSON(encryptedResponse2.serviceAuth, tgsResponse.serviceSessionKey)
+                                        val serviceAuth = Json.decodeFromString<ServiceAuth>(serviceAuthJSON)
+                                        Log.d(TAG, serviceAuth.serviceId)
                                     }
                                 }
-
-                                is Result.Success -> {
-                                    val encryptedResponse = Json.decodeFromString<SSEncryptedResponse>(result.get().obj().toString())
-                                    val serviceAuthJSON = decryptJSON(encryptedResponse.serviceAuth, tgsResponse.serviceSessionKey)
-                                    val serviceAuth = Json.decodeFromString<ServiceAuth>(serviceAuthJSON)
-                                    Log.d(TAG, serviceAuth.serviceId)
-                                }
                             }
+                        } catch (e: Exception) {
+                            logout()
                         }
                     }
                 }

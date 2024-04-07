@@ -1,16 +1,21 @@
 package com.example.whisper.ui
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.whisper.ui.view.Login
-import com.example.whisper.view_model.AuthState
+import com.example.whisper.view_model.AuthStateViewModel
 
 @Composable
 fun Switcher(
-    appState: WhisperAppState
+    appState: WhisperAppState,
+    viewModel: AuthStateViewModel = viewModel()
 ) {
-    val authState = AuthState.current
-    if (authState.isLoggedIn)
+    val isLoggedIn: Boolean by viewModel.isLoggedIn.collectAsStateWithLifecycle()
+
+    if (isLoggedIn)
         WhisperApp(appState)
     else
-        Login()
+        Login(login = viewModel::login)
 }

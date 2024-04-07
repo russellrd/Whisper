@@ -101,9 +101,6 @@ class TicketGrantingServer():
         # Encrypt the ST
         encrypted_ST = CryptoSystem.encrypt(json_ST, service_secret_key)
 
-        print(encrypted_TGS_response)
-        print(encrypted_ST)
-
         return {
             "tgsResponse": encrypted_TGS_response,
             "st": encrypted_ST

@@ -59,6 +59,9 @@ class AuthenticationServer():
         # Get the client's secret key
         client_secret_key = KDC_DB.get_client_secret_key(AS_request.id)
 
+        if client_secret_key is None:
+            return "Client secret key not found"
+
         # Encrypt the AS response
         encrypted_AS_response = CryptoSystem.encrypt(json_AS_response, client_secret_key)
 
@@ -68,7 +71,7 @@ class AuthenticationServer():
             "1", # TODO: Use actual id
             datetime.now(timezone.utc),
             AS_request.ip,
-            datetime.now(timezone.utc)+timedelta(hours=1),
+            AS_request.desiredLifetime,
             tgs_session_key
         )
         json_TGT = json.dumps(TGT.__dict__, cls=JSONEncoderWithDatetime)
@@ -78,11 +81,8 @@ class AuthenticationServer():
 
         # Encrypt the TGT
         encrypted_TGT = CryptoSystem.encrypt(json_TGT, tgs_secret_key)
-        decrypted_TGT = CryptoSystem.decrypt(encrypted_TGT, tgs_secret_key)
 
         print(encrypted_AS_response)
-        print("en:",encrypted_TGT)
-        print("de:",decrypted_TGT)
 
         return {
             "asResponse": encrypted_AS_response,

@@ -1,6 +1,5 @@
 package com.example.whisper.ui.view
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,16 +20,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.whisper.view_model.AuthState
 
 @Composable
 fun Login(
+    login: (String, String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val authState = AuthState.current
     Box(
         modifier
             .fillMaxSize()
@@ -75,7 +72,7 @@ fun Login(
 
             Box(modifier = Modifier.padding(60.dp, 0.dp)) {
                 Button(
-                    onClick = {authState.login(username.value.text, password.value.text)},
+                    onClick = {login(username.value.text, password.value.text)},
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(50.dp)
@@ -83,8 +80,6 @@ fun Login(
                     Text(text = "Login")
                 }
             }
-
-//            Toast.makeText(context, "Incorrect Username/Password", Toast.LENGTH_SHORT).show()
         }
     }
 }
