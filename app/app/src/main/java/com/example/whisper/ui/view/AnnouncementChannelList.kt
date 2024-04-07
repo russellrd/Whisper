@@ -55,11 +55,12 @@ fun AnnouncementChannelList(
         value = value,
         modifier = modifier
     )
-    NewAnnouncementChannelButton()
+    NewAnnouncementPageButton()
+    ManageSubscriptionButton()
 }
 
 @Composable
-fun NewAnnouncementChannelButton(modifier: Modifier = Modifier) {
+fun NewAnnouncementPageButton(modifier: Modifier = Modifier) {
     var showDialog by remember { mutableStateOf(false) }
     var nameSearch by remember { mutableStateOf("") }
 
@@ -75,15 +76,15 @@ fun NewAnnouncementChannelButton(modifier: Modifier = Modifier) {
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(16.dp),
-            contentPadding = PaddingValues(all = 25.dp)
+            contentPadding = PaddingValues(all = 25.dp),
         ) {
-            Text("New Announcement Channel")
+            Text("New Announcement Page")
         }
 
         if (showDialog) {
             AlertDialog(
                 onDismissRequest = { showDialog = false },
-                title = { Text("New Announcement Channel") },
+                title = { Text("New Announcement Page") },
                 text = {
                     TextField(
                         value = nameSearch,
@@ -110,6 +111,66 @@ fun NewAnnouncementChannelButton(modifier: Modifier = Modifier) {
             )
         }
     }
+}
+
+@Composable
+fun ManageSubscriptionButton(modifier: Modifier = Modifier) {
+    var showDialog by remember { mutableStateOf(false) }
+    var nameSearch by remember { mutableStateOf("") }
+
+    Box(
+        modifier = modifier
+            .padding(bottom = 96.dp)
+            .fillMaxSize()
+    ) {
+        Button(
+            onClick = {
+                showDialog = true
+            },
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(16.dp),
+            contentPadding = PaddingValues(all = 25.dp)
+        ) {
+            Text("Manage Subscriptions")
+        }
+
+        if (showDialog) {
+            AlertDialog(
+                onDismissRequest = { showDialog = false },
+                title = { Text("Manage Subscriptions") },
+                text = {
+                    TextField(
+                        value = nameSearch,
+                        onValueChange = { nameSearch = it },
+                        label = { Text("Enter Channel Name") }
+                    )
+                },
+                confirmButton = {
+                    Button(
+                        onClick = {
+                            //figure out how to handle
+                            showDialog = false // Close after confirmation
+
+                        }
+                    ) {
+                        Text("Confirm")
+                    }
+                },
+                dismissButton = {
+                    Button(onClick = { showDialog = false }) {
+                        Text("Cancel")
+                    }
+                }
+            )
+        }
+    }
+}
+
+@Composable
+fun SubscriptionPage() {
+    // Your page content
+    Text(text = "This is the Subscription Page")
 }
 
 @SuppressLint("UnrememberedMutableState")
