@@ -8,7 +8,7 @@ from routes.messages import message_bp
 
 # Start the flask server 
 if __name__ == "__main__":
-    app = Flask(__name__)
+    app = Flask(__name__) 
     
     # Register all blueprints 
     app.register_blueprint(announcement_channel_bp)

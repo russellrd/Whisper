@@ -14,7 +14,7 @@ INNER JOIN AUTHENTICATION_SERVER p2 ON p2.id = MESSAGE_CHANNELS.user2;""")
 # Get's all current chats that you're apart of - Employee 
 @message_channel_bp.route("/getCurrentChats", methods=["GET"])
 def get_user_message_channels():
-    user_id = request.args.get("id")
+    user_id = request.args.get("id") 
     return database_command(f"""
 SELECT temp.id as id, p1.name as user1, p2.name as user2
 FROM (

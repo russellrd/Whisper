@@ -13,7 +13,7 @@ def send_message():
     message_channel = request.args.get("channel")
     timestamp = str(time.time())
     message = request.args.get("message")
-    id = timestamp
+    id = timestamp 
     
     # Get the message channel session key 
     query = database_command(f"SELECT channel_key FROM MESSAGE_CHANNELS WHERE id = '{message_channel}';")
