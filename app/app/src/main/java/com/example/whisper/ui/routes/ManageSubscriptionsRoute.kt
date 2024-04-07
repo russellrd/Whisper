@@ -22,6 +22,6 @@ fun ManageSubscriptionsScreen(modifier: Modifier = Modifier) {
             .fillMaxSize()
             .padding(10.dp)
     ) {
-        Text("Hello $userId")
+        Text("Hello")
     }
 }
