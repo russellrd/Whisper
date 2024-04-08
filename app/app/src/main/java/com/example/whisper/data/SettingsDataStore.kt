@@ -15,7 +15,6 @@ const val SETTINGS_DATASTORE = "settings_datastore"
 
 private val Context.settingsDataStore: DataStore<Preferences> by preferencesDataStore(name = SETTINGS_DATASTORE)
 
-// Persisting changes made in the settings to Language and Theme
 class SettingsDataStore(private val context: Context) {
     companion object {
         val LANGUAGE = stringPreferencesKey("LANGUAGE")
