@@ -33,23 +33,29 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.whisper.crypto.CryptoSystem
 import com.example.whisper.model.AnnouncementChannel
 import com.example.whisper.model.AnnouncementChannelRepositories
+import com.example.whisper.model.Auth
 import com.example.whisper.model.UserAuth
 import com.example.whisper.view_model.AnnouncementChannelViewModel
-import com.example.whisper.view_model.AuthState
+import com.example.whisper.view_model.AuthStateViewModel
 
 //this shows only the list of announcements channels that the user is subscribed to
 @Composable
 fun AllAnnouncementChannelList(
     viewModel: AnnouncementChannelViewModel = AnnouncementChannelViewModel(),
+    authViewModel: AuthStateViewModel = viewModel(),
     modifier: Modifier = Modifier
 ) {
     val value by remember { viewModel.repositories }
-    val p = AuthState.current.auth
+    val auth: Auth by authViewModel.auth.collectAsStateWithLifecycle() // Create authentication object reference for API calls
 
     LaunchedEffect(key1 = Unit) {
-        viewModel.getSubscribedAnnouncementChannels(p)
+        if(CryptoSystem.authenticate(auth, com.example.whisper.crypto.Role.USER, authViewModel::logout))
+            viewModel.getAllAnnouncementChannels(auth = auth)
     }
 
     AllAnnouncementChannelListBody(

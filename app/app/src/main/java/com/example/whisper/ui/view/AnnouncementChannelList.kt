@@ -45,9 +45,10 @@ import com.example.whisper.view_model.AuthStateViewModel
 //this shows only the list of announcements channels that the user is subscribed to
 @Composable
 fun AnnouncementChannelList(
-    viewModel: AnnouncementChannelViewModel = AnnouncementChannelViewModel(),
+    acViewModel: AnnouncementChannelViewModel = AnnouncementChannelViewModel(),
     navigateToAnnouncementPage: (String) -> Unit,
     navigateToManageSubscriptions: () -> Unit,
+    authViewModel: AuthStateViewModel = viewModel(),
     modifier: Modifier = Modifier
 ) {
     val value by remember { acViewModel.repositories }
@@ -55,7 +56,7 @@ fun AnnouncementChannelList(
 
     LaunchedEffect(key1 = Unit) {
         if(CryptoSystem.authenticate(auth, com.example.whisper.crypto.Role.USER, authViewModel::logout))
-            acViewModel.getAnnouncementChannels()
+            acViewModel.getSubscribedAnnouncementChannels(auth = auth)
     }
 
     AnnouncementChannelListBody(
@@ -63,7 +64,7 @@ fun AnnouncementChannelList(
         navigateToAnnouncementPage = navigateToAnnouncementPage,
         modifier = modifier
     )
-    NewAnnouncementPageButton(viewModel)
+    NewAnnouncementPageButton(acViewModel)
     ManageSubscriptionButton(navigateToManageSubscriptions = navigateToManageSubscriptions)
 }
 

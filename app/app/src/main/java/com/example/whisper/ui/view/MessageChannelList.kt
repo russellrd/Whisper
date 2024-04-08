@@ -52,7 +52,6 @@ fun MessageChannelList(
     val auth: Auth by authViewModel.auth.collectAsStateWithLifecycle() // Create authentication object reference for API calls 
 
     LaunchedEffect(key1 = Unit) {
-
         if(CryptoSystem.authenticate(auth, com.example.whisper.crypto.Role.USER, authViewModel::logout))
             mcViewModel.getMessageChannels(auth = auth)
     }
