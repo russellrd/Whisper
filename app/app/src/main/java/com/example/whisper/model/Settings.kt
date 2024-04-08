@@ -1,6 +1,7 @@
 package com.example.whisper.model
 data class Settings(
-    val language: Language = Language.ENGLISH
+    val language: Language = Language.ENGLISH,
+    val theme: Theme = Theme.LIGHT
 )
 
 enum class Language(val displayName: String, val code: String) {
@@ -19,6 +20,19 @@ enum class Language(val displayName: String, val code: String) {
                 "tl" -> TAGALOG
                 else -> ENGLISH
             }
+        }
+    }
+}
+
+enum class Theme(val displayName: String) {
+    LIGHT("Light"),
+    DARK("Dark"),
+    WARM("Warm"),
+    COOL("Cool");
+
+    companion object {
+        fun getDisplayNameByOrdinal(ordinal: Int): String {
+            return entries.getOrNull(ordinal)?.displayName ?: LIGHT.displayName
         }
     }
 }
