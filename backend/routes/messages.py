@@ -1,18 +1,26 @@
 from flask import Blueprint, request
+from pydantic import BaseModel
 from database.database_handler import database_command 
 from KDC.kdc_utils import MessageEncryption
 import time
 
 message_bp = Blueprint("message", __name__, url_prefix="/message")
 
+class SendMessageRequest(BaseModel):
+    sender: str
+    receiver: str
+    message_channel: str
+    message: str
+
 # Send a message to another use 
 @message_bp.route("/sendMessage", methods=["POST"])
 def send_message():
-    sender = request.args.get("sender")
-    receiver = request.args.get("receiver")
-    message_channel = request.args.get("channel")
+    message_request = SendMessageRequest(**request.get_json())
+    sender = message_request.sender
+    receiver = message_request.receiver
+    message_channel = message_request.message_channel
     timestamp = str(time.time())
-    message = request.args.get("message")
+    message = message_request.message
     id = timestamp 
     
     # Get the message channel session key 
