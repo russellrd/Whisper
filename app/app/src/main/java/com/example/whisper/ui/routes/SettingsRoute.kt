@@ -57,6 +57,7 @@ fun SettingsScreen(
     var expandedLanguage by remember { mutableStateOf(false) }
     var expandedTheme by remember { mutableStateOf(false) }
 
+    // Create a dropdown menu for Langauges
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -121,6 +122,7 @@ fun SettingsScreen(
 
             Spacer(modifier = Modifier.height(30.dp))
 
+            // Create a dropdown menu for Themes
             Box(modifier = Modifier
                 .fillMaxWidth(0.3f)
                 .background(color = MaterialTheme.colorScheme.primary)
@@ -172,7 +174,7 @@ fun SettingsScreen(
 
             Spacer(modifier = Modifier.height(30.dp))
 
-
+            // Create a button for logging out
             Box(modifier = Modifier.padding(60.dp, 0.dp)) {
                 Button(
                     onClick = { authViewModel.logout() },
