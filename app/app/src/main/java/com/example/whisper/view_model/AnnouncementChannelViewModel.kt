@@ -32,7 +32,7 @@ class AnnouncementChannelViewModel {
 
         val body = Json.encodeToString(CreateAnnouncementChannel(title = ""))
         val header: HashMap<String, String> = hashMapOf()
-        Fuel.post("http://10.0.2.2:4321/announcementChannel/getAll").header(header).body(body).responseJson{ _, _, result ->
+        Fuel.post("http://10.0.2.2:4321/announcementChannel/createAnnouncementPage").header(header).body(body).responseJson{ _, _, result ->
             Log.d(TAG, result.toString())
             when(result){
                 is Result.Failure -> {
