@@ -74,27 +74,26 @@ class AnnouncementChannelViewModel {
             }
         }
     }
-}
-
-//this function gets all of the announcement channels in the database
-fun getAllAnnouncementChannels(auth: Auth) {
+    //this function gets all of the announcement channels in the database
+    fun getAllAnnouncementChannels(auth: Auth) {
 //        if(!authenticate(auth, Role.USER))
 //            return
-    val header: HashMap<String, String> = hashMapOf()
-    Fuel.get("http://10.0.2.2:4321/announcementChannel/getAll").header(header).responseJson{ _, _, result ->
-        Log.d(TAG, result.toString())
-        when(result){
-            is Result.Failure -> {
-                val ex = result.getException()
-                if(ex.response.statusCode == 404){
-                    var tmp = AnnouncementChannelRepositories(data = listOf())
+        val header: HashMap<String, String> = hashMapOf()
+        Fuel.get("http://10.0.2.2:4321/announcementChannel/getAll").header(header).responseJson{ _, _, result ->
+            Log.d(TAG, result.toString())
+            when(result){
+                is Result.Failure -> {
+                    val ex = result.getException()
+                    if(ex.response.statusCode == 404){
+                        var tmp = AnnouncementChannelRepositories(data = listOf())
+                        _repositories.value = tmp
+                    }
+                }
+
+                is Result.Success -> {
+                    val tmp = Json.decodeFromString<AnnouncementChannelRepositories>(result.get().obj().toString())
                     _repositories.value = tmp
                 }
-            }
-
-            is Result.Success -> {
-                val tmp = Json.decodeFromString<AnnouncementChannelRepositories>(result.get().obj().toString())
-                _repositories.value = tmp
             }
         }
     }

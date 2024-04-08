@@ -23,10 +23,6 @@ fun AnnouncementsPageScreen(modifier: Modifier = Modifier) {
             .fillMaxSize()
             .padding(10.dp)
     ) {
-        AnnouncementChannelList(
-            modifier = modifier,
-            navigateToAnnouncementPage = navigateToAnnouncementPage,
-            navigateToManageSubscriptions = navigateToManageSubscriptions
-        )
+        Text("hello")
     }
 }

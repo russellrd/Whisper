@@ -18,10 +18,3 @@ data class AnnouncementChannelRepositories(
 data class CreateAnnouncementChannel(
     val title: String = ""
 )
-
-@Serializable
-data class getAllAnnouncementChannels(
-    var id: String = "",
-    var title: String = "",
-    var department: String = ""
-)

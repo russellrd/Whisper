@@ -39,23 +39,112 @@ import com.example.whisper.model.UserAuth
 import com.example.whisper.view_model.AnnouncementChannelViewModel
 import com.example.whisper.view_model.AuthState
 
+//this shows only the list of announcements channels that the user is subscribed to
 @Composable
 fun AllAnnouncementChannelList(
     viewModel: AnnouncementChannelViewModel = AnnouncementChannelViewModel(),
+    navigateToAnnouncementPage: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val value by remember { viewModel.repositories }
     val p = AuthState.current.auth
 
     LaunchedEffect(key1 = Unit) {
-        viewModel.getAllAnnouncementChannels(p)
+        viewModel.getSubscribedAnnouncementChannels(p)
     }
 
-    AnnouncementChannelListBody(
+    AllAnnouncementChannelListBody(
         value = value,
         navigateToAnnouncementPage = navigateToAnnouncementPage,
         modifier = modifier
     )
-    NewAnnouncementPageButton(viewModel)
-    ManageSubscriptionButton(navigateToManageSubscriptions = navigateToManageSubscriptions)
+}
+
+
+//@SuppressLint("UnrememberedMutableState")
+//@Composable
+//@Preview
+//private fun AnnouncementChannelListPreview(
+//    modifier: Modifier = Modifier
+//) {
+//    val data: MutableState<AnnouncementChannelRepositories> =
+//    mutableStateOf(
+//        AnnouncementChannelRepositories(
+//            data = listOf()
+//        )
+//    )
+//
+//    data.value = AnnouncementChannelRepositories(
+//        data = listOf(
+//            AnnouncementChannel("0", "Cool Page", "Wawdawd"),
+//            AnnouncementChannel("1", "Special", "WDAWDAWDWAWA"),
+//            AnnouncementChannel("2", "Tuvok's Words-o-Wisdom", "Awdawd")
+//        )
+//    )
+//
+//    val value by remember { data }
+//
+//    AnnouncementChannelListBody(
+//        value = value,
+//        navigateToAnnouncement = navigateToAnnouncement,
+//        modifier = modifier
+//    )
+//}
+
+@Composable
+private fun AllAnnouncementChannelListBody(
+    value: AnnouncementChannelRepositories,
+    navigateToAnnouncementPage: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = modifier.padding(bottom = 16.dp)
+    ){
+        LazyColumn(){
+            items(value.data) { announcementChannel: AnnouncementChannel ->
+                Card(
+                    modifier = modifier
+                        .fillMaxWidth()
+                        .padding(5.dp)
+                        .clickable(
+                            role = Role.Checkbox,
+                            onClick = {
+                                navigateToAnnouncementPage(announcementChannel.id)
+                            }
+                        ),
+                    elevation = CardDefaults.cardElevation(
+                        defaultElevation = 6.dp
+                    )
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = modifier.fillMaxWidth(),
+                    ){
+                        Column(
+                            modifier = modifier
+                                .padding(10.dp)
+                                .fillMaxWidth(0.9f)
+                        ) {
+                            Text(
+                                announcementChannel.title,
+                                color = MaterialTheme.colorScheme.onBackground,
+                                textAlign = TextAlign.Center,
+                                fontSize = 25.sp
+                            )
+                            Text(
+                                announcementChannel.department,
+                                color = MaterialTheme.colorScheme.onBackground,
+                                textAlign = TextAlign.Center,
+                                fontSize = 10.sp
+                            )
+                        }
+                        Checkbox(
+                            checked = false,
+                            onCheckedChange = null,
+                        )
+                    }
+                }
+            }
+        }
+    }
 }

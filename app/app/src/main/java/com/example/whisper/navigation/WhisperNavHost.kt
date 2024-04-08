@@ -26,7 +26,7 @@ fun WhisperNavHost(
             navigateToAnnouncementPage = navController::navigateToAnnouncementPage
         )
         announcementPageScreen()
-        manageSubscriptionsScreen()
+        manageSubscriptionsScreen(navigateToAnnouncementPage = navController::navigateToAnnouncementPage)
         settingsScreen()
     }
 }

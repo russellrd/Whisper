@@ -11,8 +11,8 @@ const val MANAGE_SUBSCRIPTIONS_ROUTE = "manage_subscriptions_route"
 
 fun NavController.navigateToManageSubscriptions(navOptions: NavOptions ? = null) = navigate(MANAGE_SUBSCRIPTIONS_ROUTE, navOptions)
 
-fun NavGraphBuilder.manageSubscriptionsScreen() {
+fun NavGraphBuilder.manageSubscriptionsScreen(navigateToAnnouncementPage: (String) -> Unit) {
     composable(route = MANAGE_SUBSCRIPTIONS_ROUTE) {
-        ManageSubscriptionsRoute()
+        ManageSubscriptionsRoute(navigateToAnnouncementPage = navigateToAnnouncementPage)
     }
 }

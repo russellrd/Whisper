@@ -7,21 +7,32 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.whisper.ui.view.AllAnnouncementChannelList
 
 @Composable
 fun ManageSubscriptionsRoute(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navigateToAnnouncementPage: (String) -> Unit,
 ) {
-    ManageSubscriptionsScreen(modifier = modifier)
+    ManageSubscriptionsScreen(
+        modifier = modifier,
+        navigateToAnnouncementPage = navigateToAnnouncementPage,
+    )
 }
 
 @Composable
-fun ManageSubscriptionsScreen(modifier: Modifier = Modifier) {
+fun ManageSubscriptionsScreen(
+    modifier: Modifier = Modifier,
+    navigateToAnnouncementPage: (String) -> Unit,
+) {
     Box(
         modifier = modifier
             .fillMaxSize()
             .padding(10.dp)
     ) {
-        Text("Hello")
+        AllAnnouncementChannelList(
+            modifier = modifier,
+            navigateToAnnouncementPage = navigateToAnnouncementPage,
+        )
     }
 }
