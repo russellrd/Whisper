@@ -15,6 +15,7 @@ class SendMessageRequest(BaseModel):
 # Send a message to another use 
 @message_bp.route("/sendMessage", methods=["POST"])
 def send_message():
+    # Extract all data from the json request 
     message_request = SendMessageRequest(**request.get_json())
     sender = message_request.sender
     receiver = message_request.receiver
