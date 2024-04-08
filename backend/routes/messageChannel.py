@@ -3,7 +3,7 @@ from database.database_handler import database_command
 
 message_channel_bp = Blueprint("messageChannel", __name__, url_prefix="/messageChannel")
 
-# This should be user admin AUTHENTICATION_SERVER only 
+# This should be user admin users only 
 @message_channel_bp.route("/getAll", methods=["GET"])
 def get_all_message_channels():    
     return database_command("""SELECT MESSAGE_CHANNELS.id as id, p1.name as user1, p2.name as user2
@@ -31,9 +31,9 @@ INNER JOIN AUTHENTICATION_SERVER p1 ON p1.id = temp.user1
 INNER JOIN AUTHENTICATION_SERVER p2 ON p2.id = temp.user2;
 """)
     
-# Get all related AUTHENTICATION_SERVER based on search prompt 
-@message_channel_bp.route("/getAUTHENTICATION_SERVERearch", methods=["GET"])
-def query_related_AUTHENTICATION_SERVER():
+# Get all related users based on search prompt 
+@message_channel_bp.route("/getUserSearch", methods=["GET"])
+def query_related_users():
     search = request.args.get("id")
     
     query = database_command(f"SELECT * FROM AUTHENTICATION_SERVER WHERE name LIKE '%{search}%';")
@@ -41,6 +41,6 @@ def query_related_AUTHENTICATION_SERVER():
     # Sort through the query based on the location of the search index
     query['data'].sort(key=lambda x: x["name"].find(search))
     
-    # [Insert section for removing AUTHENTICATION_SERVER that outside of security range]
+    # [Insert section for removing users that outside of security range]
     
     return query
