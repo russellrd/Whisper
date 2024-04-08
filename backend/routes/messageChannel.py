@@ -5,16 +5,33 @@ message_channel_bp = Blueprint("messageChannel", __name__, url_prefix="/messageC
 
 # This should be user admin users only 
 @message_channel_bp.route("/getAll", methods=["GET"])
-def get_all_message_channels():    
+def get_all_message_channels(): 
     return database_command("""SELECT MESSAGE_CHANNELS.id as id, p1.name as user1, p2.name as user2
 FROM MESSAGE_CHANNELS 
 INNER JOIN AUTHENTICATION_SERVER p1 ON p1.id = MESSAGE_CHANNELS.user1 
 INNER JOIN AUTHENTICATION_SERVER p2 ON p2.id = MESSAGE_CHANNELS.user2;""")
 
+
 # Get's all current chats that you're apart of - Employee 
 @message_channel_bp.route("/getCurrentChats", methods=["GET"])
 def get_user_message_channels():
     user_id = request.args.get("id") 
+    x = database_command(f"""
+SELECT temp.id as id, p1.name as user1, p2.name as user2
+FROM (
+SELECT m.id as id, m.user1 as user1, m.user2 as user2
+FROM (SELECT * FROM MESSAGE_CHANNELS WHERE (MESSAGE_CHANNELS.user1 = "{user_id}")) as m
+INNER JOIN AUTHENTICATION_SERVER p1 ON p1.id = m.user1 
+INNER JOIN AUTHENTICATION_SERVER p2 ON p2.id = m.user2  
+UNION 
+SELECT m.id as id, m.user2 as user1, m.user1 as user2
+FROM (SELECT * FROM MESSAGE_CHANNELS WHERE (MESSAGE_CHANNELS.user2 = "{user_id}")) as m
+INNER JOIN AUTHENTICATION_SERVER p1 ON p1.id = m.user1 
+INNER JOIN AUTHENTICATION_SERVER p2 ON p2.id = m.user2) as temp
+INNER JOIN AUTHENTICATION_SERVER p1 ON p1.id = temp.user1 
+INNER JOIN AUTHENTICATION_SERVER p2 ON p2.id = temp.user2;
+""")
+    
     return database_command(f"""
 SELECT temp.id as id, p1.name as user1, p2.name as user2
 FROM (

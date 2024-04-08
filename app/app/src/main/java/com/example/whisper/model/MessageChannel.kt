@@ -13,3 +13,18 @@ data class MessageChannel(
 data class MessageChannelRepositories(
     val data: List<MessageChannel>
 )
+
+@Serializable
+data class messageInfo(
+    var id: String = "",
+    var sender: String = "",
+    var receiver: String = "",
+    var message_channel: String = "",
+    var message: String = "",
+    var timestamp: String = ""
+)
+
+@Serializable
+data class MessageRepositories(
+    val data: List<messageInfo>
+)

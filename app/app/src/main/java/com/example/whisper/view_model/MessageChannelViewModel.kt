@@ -5,11 +5,13 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import com.example.whisper.model.Auth
 import com.example.whisper.model.MessageChannelRepositories
+import com.example.whisper.model.messageInfo
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.json.responseJson
 import com.github.kittinunf.result.Result
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
 
 private const val TAG = "MessageChannelViewModel"
 
@@ -19,6 +21,7 @@ class MessageChannelViewModel { // I feel like this class can be abstracted to s
             data = listOf()
         )
     )
+
 
     val repositories: MutableState<MessageChannelRepositories> = _repositories
 
@@ -42,8 +45,15 @@ class MessageChannelViewModel { // I feel like this class can be abstracted to s
                 is Result.Success -> {
                     val tmp = Json.decodeFromString<MessageChannelRepositories>(result.get().obj().toString())
                     _repositories.value = tmp
+                    tmp.data.forEach {
+                        Log.d("abcdefghijklmnopqrstuvwxyz", it.id)
+                    }
+
                 }
             }
         }
     }
+
+
+
 }
