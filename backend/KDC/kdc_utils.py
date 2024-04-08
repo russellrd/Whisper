@@ -59,4 +59,4 @@ class MessageEncryption():
             else: 
                 dMessage += message[i]
         
-        return dMessage
+        return dMessage 
