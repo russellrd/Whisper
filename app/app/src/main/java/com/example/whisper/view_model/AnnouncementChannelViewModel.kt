@@ -4,11 +4,14 @@ import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import com.example.whisper.model.AnnouncementChannelRepositories
+import com.example.whisper.model.Auth
+import com.example.whisper.model.CreateAnnouncementChannel
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.json.responseJson
 import com.github.kittinunf.result.Result
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
 
 private const val TAG = "AnnouncementChannelViewModel"
 
@@ -21,7 +24,56 @@ class AnnouncementChannelViewModel {
 
     val repositories: MutableState<AnnouncementChannelRepositories> = _repositories
 
-    fun getAnnouncementChannels() {
+    //this function is used to create a new announcement channel
+    fun createAnnouncementChannel(title: String){
+        val header: HashMap<String, String> = hashMapOf()
+        Fuel.post("http://10.0.2.2:4321/announcementChannel/createAnnouncementPage?title=" + title).header(header).responseJson{ _, _, result ->
+            Log.d(TAG, result.toString())
+            when(result){
+                is Result.Failure -> {
+                    val ex = result.getException()
+                    if(ex.response.statusCode == 404){
+                        var tmp = AnnouncementChannelRepositories(data = listOf())
+                        _repositories.value = tmp
+                    }
+                }
+
+                is Result.Success -> {
+                    val tmp = Json.decodeFromString<AnnouncementChannelRepositories>(result.get().obj().toString())
+                    _repositories.value = tmp
+                }
+            }
+        }
+    }
+
+    //this function gets all of the announcement channels that the user is subscribed to
+    fun getSubscribedAnnouncementChannels(auth: Auth) {
+//        if(!authenticate(auth, Role.USER))
+//            return
+        val header: HashMap<String, String> = hashMapOf()
+        //change this to /getUserAnnouncementChannels
+        Fuel.get("http://10.0.2.2:4321/announcementChannel/getAll").header(header).responseJson{ _, _, result ->
+            Log.d(TAG, result.toString())
+            when(result){
+                is Result.Failure -> {
+                    val ex = result.getException()
+                    if(ex.response.statusCode == 404){
+                        var tmp = AnnouncementChannelRepositories(data = listOf())
+                        _repositories.value = tmp
+                    }
+                }
+
+                is Result.Success -> {
+                    val tmp = Json.decodeFromString<AnnouncementChannelRepositories>(result.get().obj().toString())
+                    _repositories.value = tmp
+                }
+            }
+        }
+    }
+    //this function gets all of the announcement channels in the database
+    fun getAllAnnouncementChannels(auth: Auth) {
+//        if(!authenticate(auth, Role.USER))
+//            return
         val header: HashMap<String, String> = hashMapOf()
         Fuel.get("http://10.0.2.2:4321/announcementChannel/getAll").header(header).responseJson{ _, _, result ->
             Log.d(TAG, result.toString())
@@ -42,4 +94,3 @@ class AnnouncementChannelViewModel {
         }
     }
 }
-

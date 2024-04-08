@@ -5,7 +5,6 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.NavHost
 import com.example.whisper.ui.WhisperAppState
-
 @Composable
 fun WhisperNavHost(
     appState: WhisperAppState,
@@ -22,7 +21,12 @@ fun WhisperNavHost(
             navigateToDM = navController::navigateToDirectMessages
         )
         directMessagesScreen()
-        announcementsScreen()
+        announcementsScreen(
+            navigateToManageSubscriptions = navController::navigateToManageSubscriptions,
+            navigateToAnnouncementPage = navController::navigateToAnnouncementPage
+        )
+        announcementPageScreen()
+        manageSubscriptionsScreen(navigateToAnnouncementPage = navController::navigateToAnnouncementPage)
         settingsScreen()
     }
 }

@@ -8,10 +8,16 @@ import com.example.whisper.ui.routes.AnnouncementsRoute
 
 const val ANNOUNCEMENTS_ROUTE = "announcements_route"
 
-fun NavController.navigateToAnnouncements(navOptions: NavOptions) = navigate(ANNOUNCEMENTS_ROUTE, navOptions)
+fun NavController.navigateToAnnouncements(navOptions: NavOptions ? = null) = navigate(ANNOUNCEMENTS_ROUTE, navOptions)
+fun NavGraphBuilder.announcementsScreen(
+    navigateToManageSubscriptions: () -> Unit,
+    navigateToAnnouncementPage: (String) -> Unit
 
-fun NavGraphBuilder.announcementsScreen() {
+) {
     composable(route = ANNOUNCEMENTS_ROUTE) {
-        AnnouncementsRoute()
+        AnnouncementsRoute(
+            navigateToAnnouncementPage = navigateToAnnouncementPage,
+            navigateToManageSubscriptions = navigateToManageSubscriptions
+        )
     }
 }
