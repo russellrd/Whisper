@@ -13,3 +13,12 @@ data class MessageChannel(
 data class MessageChannelRepositories(
     val data: List<MessageChannel>
 )
+
+@Serializable
+data class messageInfo(
+    var channelId: String = "",
+    var sender: String = "",
+    var receiver: String = "",
+    var timestamp: String = "",
+    var message: String = "",
+)

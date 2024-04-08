@@ -1,4 +1,7 @@
+from datetime import datetime
+import secrets
 from flask import Blueprint, request
+from pydantic import BaseModel
 from database.database_handler import database_command 
 
 message_bp = Blueprint("message", __name__, url_prefix="/message")
@@ -44,3 +47,22 @@ def query_related_AUTHENTICATION_SERVER():
     # [Insert section for removing AUTHENTICATION_SERVER that outside of security range]
     
     return query
+
+class SMRequest(BaseModel):
+    channelId: str
+    sender: str
+    receiver: str
+    timestamp: str
+    message: str
+
+# This should be user admin AUTHENTICATION_SERVER only 
+@message_bp.route("/sendMessage", methods=["POST"])
+def send_message():   
+    smRequest = SMRequest(**request.get_json())
+    id = secrets.token_bytes(16).hex() 
+    database_command(f"INSERT INTO MESSAGES (id, message_channel, sender, receiver, timestamp, message) VALUES ('{id}', '{smRequest.channelId}', '{smRequest.sender}', '{smRequest.receiver}', '{smRequest.timestamp}', '{smRequest.message}')")
+    return "True"
+#     return database_command("""SELECT MESSAGE_CHANNELS.id as id, p1.name as user1, p2.name as user2
+# FROM MESSAGE_CHANNELS 
+# INNER JOIN AUTHENTICATION_SERVER p1 ON p1.id = MESSAGE_CHANNELS.user1 
+# INNER JOIN AUTHENTICATION_SERVER p2 ON p2.id = MESSAGE_CHANNELS.user2;""")

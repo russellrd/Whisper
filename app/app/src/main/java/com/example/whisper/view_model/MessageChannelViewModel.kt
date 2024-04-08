@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import com.example.whisper.model.MessageChannelRepositories
+import com.example.whisper.model.messageInfo
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.json.responseJson
 import com.github.kittinunf.result.Result
@@ -45,4 +46,30 @@ class MessageChannelViewModel { // I feel like this class can be abstracted to s
             }
         }
     }
+
+    fun sendMessage() {
+        val header: HashMap<String, String> = hashMapOf()
+
+        var msgInfo = messageInfo()
+        Fuel.get("http://10.0.2.2:4321/message/sendMessage").header(header).responseJson{ _, _, result ->
+            Log.d(TAG, result.toString())
+            when(result) {
+                is Result.Failure -> {
+                    val ex = result.getException()
+                    if(ex.response.statusCode == 404){
+                        var tmp = MessageChannelRepositories(data = listOf())
+                        _repositories.value = tmp
+                    }
+                }
+
+                is Result.Success -> {
+                    val tmp = Json.decodeFromString<MessageChannelRepositories>(result.get().obj().toString())
+                    _repositories.value = tmp
+                }
+            }
+        }
+    }
+
+
+
 }
