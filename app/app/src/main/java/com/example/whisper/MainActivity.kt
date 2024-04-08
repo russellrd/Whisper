@@ -20,12 +20,13 @@ import com.example.whisper.view_model.SettingsViewModel
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        
         setContent {
             setContent {
             val settingsViewModel: SettingsViewModel by viewModels()
             val settings by settingsViewModel.settings.collectAsStateWithLifecycle()
             val appState = rememberWhisperAppState()
+            // Applying the user-selected theme
             WhisperTheme(theme = settings.theme) {
                 CompositionLocalProvider() {
                     Switcher(appState)
