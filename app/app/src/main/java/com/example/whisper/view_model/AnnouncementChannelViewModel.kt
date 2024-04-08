@@ -28,11 +28,10 @@ class AnnouncementChannelViewModel {
 
     val repositories: MutableState<AnnouncementChannelRepositories> = _repositories
 
-    fun createAnnouncementChannel(auth: Auth){
-
-        val body = Json.encodeToString(CreateAnnouncementChannel(title = ""))
+    //this function is used to create a new announcement channel
+    fun createAnnouncementChannel(title: String){
         val header: HashMap<String, String> = hashMapOf()
-        Fuel.post("http://10.0.2.2:4321/announcementChannel/createAnnouncementPage").header(header).body(body).responseJson{ _, _, result ->
+        Fuel.post("http://10.0.2.2:4321/announcementChannel/createAnnouncementPage?title=" + title).header(header).responseJson{ _, _, result ->
             Log.d(TAG, result.toString())
             when(result){
                 is Result.Failure -> {
@@ -51,11 +50,12 @@ class AnnouncementChannelViewModel {
         }
     }
 
-    fun getAnnouncementChannels(auth: Auth) {
+    //this function gets all of the announcement channels that the user is subscribed to
+    fun getSubscribedAnnouncementChannels(auth: Auth) {
 //        if(!authenticate(auth, Role.USER))
 //            return
         val header: HashMap<String, String> = hashMapOf()
-        Fuel.get("http://10.0.2.2:4321/announcementChannel/getAll").header(header).responseJson{ _, _, result ->
+        Fuel.get("http://10.0.2.2:4321/announcementChannel/getUserAnnouncementChannels").header(header).responseJson{ _, _, result ->
             Log.d(TAG, result.toString())
             when(result){
                 is Result.Failure -> {
@@ -74,3 +74,27 @@ class AnnouncementChannelViewModel {
         }
     }
 }
+
+//this function gets all of the announcement channels that the user is subscribed to
+//fun getAllAnnouncementChannels(auth: Auth) {
+////        if(!authenticate(auth, Role.USER))
+////            return
+//    val header: HashMap<String, String> = hashMapOf()
+//    Fuel.get("http://10.0.2.2:4321/announcementChannel/getAll").header(header).responseJson{ _, _, result ->
+//        Log.d(TAG, result.toString())
+//        when(result){
+//            is Result.Failure -> {
+//                val ex = result.getException()
+//                if(ex.response.statusCode == 404){
+//                    var tmp = AnnouncementChannelRepositories(data = listOf())
+//                    _repositories.value = tmp
+//                }
+//            }
+//
+//            is Result.Success -> {
+//                val tmp = Json.decodeFromString<AnnouncementChannelRepositories>(result.get().obj().toString())
+//                _repositories.value = tmp
+//            }
+//        }
+//    }
+//}

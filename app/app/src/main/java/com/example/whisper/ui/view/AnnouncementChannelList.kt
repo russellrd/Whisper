@@ -42,23 +42,24 @@ import com.example.whisper.view_model.AuthState
 @Composable
 fun AnnouncementChannelList(
     viewModel: AnnouncementChannelViewModel = AnnouncementChannelViewModel(),
-    navigateToAnnouncement: (String) -> Unit,
+    navigateToAnnouncementPage: (String) -> Unit,
+    navigateToManageSubscriptions: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val value by remember { viewModel.repositories }
     val p = AuthState.current.auth
 
     LaunchedEffect(key1 = Unit) {
-        viewModel.getAnnouncementChannels(p)
+        viewModel.getSubscribedAnnouncementChannels(p)
     }
 
     AnnouncementChannelListBody(
         value = value,
-        navigateToAnnouncement() = navigateToAnnouncement,
+        navigateToAnnouncementPage = navigateToAnnouncementPage,
         modifier = modifier
     )
     NewAnnouncementPageButton(viewModel)
-    ManageSubscriptionButton()
+    ManageSubscriptionButton(navigateToManageSubscriptions = navigateToManageSubscriptions)
 }
 
 @Composable
@@ -116,7 +117,10 @@ fun NewAnnouncementPageButton(viewModel: AnnouncementChannelViewModel, modifier:
 }
 
 @Composable
-fun ManageSubscriptionButton(modifier: Modifier = Modifier) {
+private fun ManageSubscriptionButton(
+    modifier: Modifier = Modifier,
+    navigateToManageSubscriptions: () -> Unit
+) {
     var nameSearch by remember { mutableStateOf("") }
 
     Box(
@@ -126,7 +130,7 @@ fun ManageSubscriptionButton(modifier: Modifier = Modifier) {
     ) {
         Button(
             onClick = {
-                //
+                navigateToManageSubscriptions()
             },
             modifier = Modifier
                 .align(Alignment.BottomEnd)
@@ -138,46 +142,40 @@ fun ManageSubscriptionButton(modifier: Modifier = Modifier) {
     }
 }
 
-@Composable
-fun SubscriptionPage() {
-    // Your page content
-    Text(text = "This is the Subscription Page")
-}
-
-@SuppressLint("UnrememberedMutableState")
-@Composable
-@Preview
-private fun AnnouncementChannelListPreview(
-    modifier: Modifier = Modifier
-) {
-    val data: MutableState<AnnouncementChannelRepositories> =
-    mutableStateOf(
-        AnnouncementChannelRepositories(
-            data = listOf()
-        )
-    )
-
-    data.value = AnnouncementChannelRepositories(
-        data = listOf(
-            AnnouncementChannel("0", "Cool Page", "Wawdawd"),
-            AnnouncementChannel("1", "Special", "WDAWDAWDWAWA"),
-            AnnouncementChannel("2", "Tuvok's Words-o-Wisdom", "Awdawd")
-        )
-    )
-
-    val value by remember { data }
-
-    AnnouncementChannelListBody(
-        value = value,
-        navigateToAnnouncement = navigateToAnnouncement,
-        modifier = modifier
-    )
-}
+//@SuppressLint("UnrememberedMutableState")
+//@Composable
+//@Preview
+//private fun AnnouncementChannelListPreview(
+//    modifier: Modifier = Modifier
+//) {
+//    val data: MutableState<AnnouncementChannelRepositories> =
+//    mutableStateOf(
+//        AnnouncementChannelRepositories(
+//            data = listOf()
+//        )
+//    )
+//
+//    data.value = AnnouncementChannelRepositories(
+//        data = listOf(
+//            AnnouncementChannel("0", "Cool Page", "Wawdawd"),
+//            AnnouncementChannel("1", "Special", "WDAWDAWDWAWA"),
+//            AnnouncementChannel("2", "Tuvok's Words-o-Wisdom", "Awdawd")
+//        )
+//    )
+//
+//    val value by remember { data }
+//
+//    AnnouncementChannelListBody(
+//        value = value,
+//        navigateToAnnouncement = navigateToAnnouncement,
+//        modifier = modifier
+//    )
+//}
 
 @Composable
 private fun AnnouncementChannelListBody(
     value: AnnouncementChannelRepositories,
-    navigateToAnnouncement: (String) -> Unit,
+    navigateToAnnouncementPage: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -192,7 +190,7 @@ private fun AnnouncementChannelListBody(
                         .clickable(
                             role = Role.Checkbox,
                             onClick = {
-                                navigateToAnnouncement(announcementChannel)
+                                navigateToAnnouncementPage(announcementChannel.id)
                             }
                         ),
                     elevation = CardDefaults.cardElevation(

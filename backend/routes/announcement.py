@@ -8,6 +8,7 @@ announcement_channel_bp = Blueprint("announcementChannel", __name__, url_prefix=
 def get_all_announcements():
     return database_command(f"SELECT * FROM ANNOUNCEMENT_CHANNELS;")
 
+@announcement_channel_bp.route("/getUserAnnouncementChannels", methods=["GET"])
 def get_user_annoucements():
     user_id = request.args.get("id")
     return database_command(f"""SELECT Ac.id, Ac.title, Ac.department 
@@ -18,5 +19,5 @@ def get_user_annoucements():
 @announcement_channel_bp.route("/createAnnouncementPage", methods=["POST"])
 def create_announcement_channel():
     id = secrets.token_bytes(16).hex()
-    title = request.args("title")
-    return database_command(f"INSERT INTO ANNOUNCEMENT_CHANNELS (id, title, department) VALUES ('{id}', '{1}', '{NULL}')")
+    title = request.args.get("title")
+    return database_command(f"INSERT INTO ANNOUNCEMENT_CHANNELS (id, title, department) VALUES ('{id}', '{title}', 'Software')")

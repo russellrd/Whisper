@@ -10,20 +10,32 @@ import com.example.whisper.ui.view.AnnouncementChannelList
 
 @Composable
 fun AnnouncementsRoute(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navigateToAnnouncementPage: (String) -> Unit,
+    navigateToManageSubscriptions: () -> Unit
 ) {
-    AnnouncementsScreen(modifier = modifier)
+    AnnouncementsScreen(
+        modifier = modifier,
+        navigateToAnnouncementPage = navigateToAnnouncementPage,
+        navigateToManageSubscriptions = navigateToManageSubscriptions
+    )
 }
 
 @Composable
 fun AnnouncementsScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navigateToAnnouncementPage: (String) -> Unit,
+    navigateToManageSubscriptions: () -> Unit
 ) {
     Box(
         modifier = modifier
             .fillMaxSize()
             .padding(10.dp)
     ) {
-        AnnouncementChannelList(modifier = modifier)
+        AnnouncementChannelList(
+            modifier = modifier,
+            navigateToAnnouncementPage = navigateToAnnouncementPage,
+            navigateToManageSubscriptions = navigateToManageSubscriptions
+        )
     }
 }
