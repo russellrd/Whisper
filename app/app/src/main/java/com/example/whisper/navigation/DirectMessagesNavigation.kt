@@ -26,7 +26,7 @@ fun NavGraphBuilder.directMessagesScreen() {
             }
         )
     ) {
-        val userId = requireNotNull(it.arguments).getString(USER_ID_ARG) ?: error("Missing friendName argument")
+        val userId = requireNotNull(it.arguments).getString(USER_ID_ARG) ?: error("Missing user id argument")
         DirectMessagesRoute(userId)
     }
 }

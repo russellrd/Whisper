@@ -28,6 +28,7 @@ fun Login(
     login: (String, String) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    // Display text boxes for username and password along with login button
     Box(
         modifier
             .fillMaxSize()
@@ -70,6 +71,7 @@ fun Login(
 
             Spacer(modifier = Modifier.height(15.dp))
 
+            // Call login function with username and password
             Box(modifier = Modifier.padding(60.dp, 0.dp)) {
                 Button(
                     onClick = {login(username.value.text, password.value.text)},

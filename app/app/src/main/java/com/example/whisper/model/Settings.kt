@@ -3,6 +3,7 @@ data class Settings(
     val language: Language = Language.ENGLISH
 )
 
+// Define i18n languages with display names and language code
 enum class Language(val displayName: String, val code: String) {
     ENGLISH("English", "en"),
     TAGALOG("Tagalog", "tl");

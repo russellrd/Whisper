@@ -82,8 +82,6 @@ class AuthenticationServer():
         # Encrypt the TGT
         encrypted_TGT = CryptoSystem.encrypt(json_TGT, tgs_secret_key)
 
-        print(encrypted_AS_response)
-
         return {
             "asResponse": encrypted_AS_response,
             "tgt": encrypted_TGT

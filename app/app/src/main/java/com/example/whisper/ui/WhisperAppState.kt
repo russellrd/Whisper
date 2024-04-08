@@ -5,7 +5,6 @@ package com.example.whisper.ui
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.navigation.NavDestination
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -19,20 +18,16 @@ import com.example.whisper.navigation.TabDestination
 import com.example.whisper.navigation.navigateToAnnouncements
 import com.example.whisper.navigation.navigateToMessages
 import com.example.whisper.navigation.navigateToSettings
-import kotlinx.coroutines.CoroutineScope
 
 @Composable
 fun rememberWhisperAppState(
-    navController: NavHostController = rememberNavController(),
-    coroutineScope: CoroutineScope = rememberCoroutineScope(),
+    navController: NavHostController = rememberNavController()
 ): WhisperAppState {
     return remember(
-        navController,
-        coroutineScope
+        navController
     ) {
         WhisperAppState(
-            navController = navController,
-            coroutineScope = coroutineScope,
+            navController = navController
         )
     }
 }
@@ -40,13 +35,15 @@ fun rememberWhisperAppState(
 @Stable
 class WhisperAppState(
     val navController: NavHostController,
-    coroutineScope: CoroutineScope,
 ) {
+    // Store current nav destination
     val currentDestination: NavDestination?
         @Composable get() = navController
             .currentBackStackEntryAsState().value?.destination
 
+    // Store current tab destination
     val currentTabDestination: TabDestination?
+        // Map route strings to tab destinations
         @Composable get() = when (currentDestination?.route) {
             MESSAGES_ROUTE -> TabDestination.MESSAGES
             ANNOUNCEMENTS_ROUTE -> TabDestination.ANNOUNCEMENTS
@@ -54,8 +51,10 @@ class WhisperAppState(
             else -> null
         }
 
+    // Store list of possible tab destinations
     val tabDestinations: List<TabDestination> = TabDestination.entries
 
+    // Navigate to a desired tab destination
     fun navigateToTabDestination(topLevelDestination: TabDestination) {
         val topLevelNavOptions = navOptions {
             // Pop up to the start destination of the graph to
@@ -71,6 +70,7 @@ class WhisperAppState(
             restoreState = true
         }
 
+        // Map tab destination to nav controller navigation
         when (topLevelDestination) {
             TabDestination.MESSAGES -> navController.navigateToMessages(
                 topLevelNavOptions

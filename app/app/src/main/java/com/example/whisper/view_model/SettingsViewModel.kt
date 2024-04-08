@@ -11,17 +11,22 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
+// View model for app settings
 class SettingsViewModel(application: Application) : AndroidViewModel(application) {
+    // Declare settings datastore
     private val settingsDataStore: SettingsDataStore
 
+    // Declare stateflows
     val settings: StateFlow<Settings>
 
+    // Initialize datastore and stateflows
     init {
         val context: Context = getApplication<Application>().applicationContext
         settingsDataStore = SettingsDataStore(context)
         settings = settingsDataStore.get().stateIn(viewModelScope, SharingStarted.Lazily, Settings())
     }
 
+    // Saves a settings configuration to the settings datastore
     fun save(settings: Settings) {
         viewModelScope.launch {
             settingsDataStore.save(settings)

@@ -10,6 +10,7 @@ import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.example.whisper.R
 
+// Outline all bottom navigation tab destinations
 enum class TabDestination(
     val destinationNameId: Int,
     val selectedIcon: ImageVector,

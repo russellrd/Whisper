@@ -15,16 +15,19 @@ const val SETTINGS_DATASTORE = "settings_datastore"
 private val Context.settingsDataStore: DataStore<Preferences> by preferencesDataStore(name = SETTINGS_DATASTORE)
 
 class SettingsDataStore(private val context: Context) {
+    // Initialize preferences to be saved
     companion object {
         val LANGUAGE = stringPreferencesKey("LANGUAGE")
     }
 
+    // Save settings
     suspend fun save(settings: Settings) {
         context.settingsDataStore.edit {
             it[LANGUAGE] = settings.language.code
         }
     }
 
+    // Get settings
     fun get() = context.settingsDataStore.data.map {
         var lang = "en"
         if (it[LANGUAGE] != null) lang = it[LANGUAGE]!!
