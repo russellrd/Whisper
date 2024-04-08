@@ -36,6 +36,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.whisper.model.Language
 import com.example.whisper.model.Settings
+import com.example.whisper.model.Theme
 import com.example.whisper.view_model.AuthStateViewModel
 import com.example.whisper.view_model.SettingsViewModel
 
@@ -53,7 +54,10 @@ fun SettingsScreen(
     authViewModel: AuthStateViewModel = viewModel()
 ) {
     val settings: Settings by settingsViewModel.settings.collectAsStateWithLifecycle()
-    var expanded by remember { mutableStateOf(false) }
+    var expandedLanguage by remember { mutableStateOf(false) }
+    var expandedTheme by remember { mutableStateOf(false) }
+
+    // Create a dropdown menu for Langauges
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -80,7 +84,7 @@ fun SettingsScreen(
                             color = MaterialTheme.colorScheme.primary
                         )
                         .clickable(
-                            onClick = { expanded = true }
+                            onClick = { expandedLanguage = true }
                         ),
                     shape = shape,
                 ) {
@@ -99,8 +103,8 @@ fun SettingsScreen(
                 }
 
                 DropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = { expanded = false },
+                    expanded = expandedLanguage,
+                    onDismissRequest = { expandedLanguage = false },
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Language.entries.forEach {
@@ -108,7 +112,7 @@ fun SettingsScreen(
                             text = { Text(it.displayName) },
                             onClick = {
                                 settingsViewModel.save(Settings(language = it))
-                                expanded = false
+                                expandedLanguage = false
                                 AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(settings.language.code))
                             }
                         )
@@ -118,6 +122,59 @@ fun SettingsScreen(
 
             Spacer(modifier = Modifier.height(30.dp))
 
+            // Create a dropdown menu for Themes
+            Box(modifier = Modifier
+                .fillMaxWidth(0.3f)
+                .background(color = MaterialTheme.colorScheme.primary)
+            ) {
+                val themeShape = RoundedCornerShape(30)
+                Card(
+                    modifier = Modifier
+                        .wrapContentSize()
+                        .border(
+                            shape = themeShape,
+                            width = 2.dp,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                        .clickable(onClick = { expandedTheme = true }),
+                    shape = themeShape,
+                ) {
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier.wrapContentSize(),
+                    ) {
+                        Text(
+                            text = settings.theme.displayName,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .wrapContentSize(Alignment.Center)
+                        )
+                    }
+                }
+
+                DropdownMenu(
+                    expanded = expandedTheme,
+                    onDismissRequest = { expandedTheme = false },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Theme.entries.forEach { theme ->
+                        DropdownMenuItem(
+                            text = { Text(theme.displayName) },
+                            onClick = {
+                                settingsViewModel.save(settings.copy(theme = theme))
+                                expandedTheme = false
+                            }
+                        )
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(30.dp))
+
+
+            Spacer(modifier = Modifier.height(30.dp))
+
+            // Create a button for logging out
             Box(modifier = Modifier.padding(60.dp, 0.dp)) {
                 Button(
                     onClick = { authViewModel.logout() },
