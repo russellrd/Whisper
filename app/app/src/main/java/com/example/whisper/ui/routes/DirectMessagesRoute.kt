@@ -145,32 +145,41 @@ fun DirectMessagesScreen(
 
     Box(modifier = modifier.fillMaxSize().padding(10.dp)) {
         LazyColumn(
-            modifier = Modifier.padding(horizontal = 10.dp)
+            modifier = Modifier
+                .padding(horizontal = 10.dp)
                 .padding(bottom = 60.dp),
             reverseLayout = true // Newest messages at the bottom
-
-
         ) {
             items(value.data) { messageInfo ->
+                // Determine if the message is from the current user
+                val isCurrentUser = messageInfo.sender == userId
+
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(4.dp),
-                    horizontalArrangement = Arrangement.End // Aligns the message boxes to the right
+                        .padding(4.dp)
                 ) {
+                    if (isCurrentUser) {
+                        Spacer(Modifier.weight(1f)) // Pushes the box to the right for the current user
+                    }
+
                     Box(
-                        contentAlignment = Alignment.CenterEnd,
                         modifier = Modifier
-                            .background(Color(0xFFFFC0CB)) // Light pink background color
+                            .background(if (isCurrentUser) Color(0xFF00897B) else Color(0xFFFFC0CB)) // Use distinct colors for differentiation
                             .padding(horizontal = 8.dp, vertical = 4.dp)
                     ) {
                         Text(
                             text = messageInfo.message,
-                            color = Color.White // Choose a text color that contrasts well with the background
+                            color = Color.White
                         )
+                    }
+
+                    if (!isCurrentUser) {
+                        Spacer(Modifier.weight(1f)) // Pushes the box to the left for the other user
                     }
                 }
             }
+
         }
 
    // Box(modifier = modifier.fillMaxSize().padding(10.dp)) {
