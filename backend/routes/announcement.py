@@ -21,3 +21,16 @@ def create_announcement_channel():
     id = secrets.token_bytes(16).hex()
     title = request.args.get("title")
     return database_command(f"INSERT INTO ANNOUNCEMENT_CHANNELS (id, title, department) VALUES ('{id}', '{title}', 'Software')")
+
+### Possible routes for sub/ un-sub
+@announcement_channel_bp.route("/subAnnouncementPage", methods=["POST"])
+def subscribe_announcement_page():
+    userID = None # userID = Current User ID
+    announcementID = None# announcementID = Current Channel ID
+    return database_command(f"INSERT INTO ANNOUNCEMENTS_SUBS (userID, announcementID) VALUES ('{userID}', '{announcementID}')")
+
+@announcement_channel_bp.route("/unSubAnnouncementPage", methods=["POST"])
+def unsubscribe_announcement_page():
+    userID = None # userID = Current User ID
+    announcementID = None# announcementID = Current Channel ID
+    return database_command(f"DELETE FROM ANNOUNCEMENTS_SUB WHERE userID = '{userID}' AND announcementID = '{announcementID}'")
