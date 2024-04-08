@@ -43,7 +43,6 @@ import com.example.whisper.view_model.AuthState
 @Composable
 fun AllAnnouncementChannelList(
     viewModel: AnnouncementChannelViewModel = AnnouncementChannelViewModel(),
-    navigateToAnnouncementPage: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val value by remember { viewModel.repositories }
@@ -55,7 +54,6 @@ fun AllAnnouncementChannelList(
 
     AllAnnouncementChannelListBody(
         value = value,
-        navigateToAnnouncementPage = navigateToAnnouncementPage,
         modifier = modifier
     )
 }
@@ -94,9 +92,9 @@ fun AllAnnouncementChannelList(
 @Composable
 private fun AllAnnouncementChannelListBody(
     value: AnnouncementChannelRepositories,
-    navigateToAnnouncementPage: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    var page_checked by remember { mutableStateOf(false) }
     Box(
         modifier = modifier.padding(bottom = 16.dp)
     ){
@@ -109,7 +107,7 @@ private fun AllAnnouncementChannelListBody(
                         .clickable(
                             role = Role.Checkbox,
                             onClick = {
-                                navigateToAnnouncementPage(announcementChannel.id)
+                                page_checked = !page_checked
                             }
                         ),
                     elevation = CardDefaults.cardElevation(
@@ -139,8 +137,8 @@ private fun AllAnnouncementChannelListBody(
                             )
                         }
                         Checkbox(
-                            checked = false,
-                            onCheckedChange = null,
+                            checked = page_checked,
+                            onCheckedChange = {},
                         )
                     }
                 }

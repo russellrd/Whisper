@@ -23,6 +23,7 @@ fun AnnouncementsPageScreen(modifier: Modifier = Modifier) {
             .fillMaxSize()
             .padding(10.dp)
     ) {
+        //Here, a list of the announcements sent within this channel will be displayed
         Text("hello")
     }
 }

@@ -34,6 +34,10 @@ fun AnnouncementsScreen(
     ) {
         AnnouncementChannelList(
             modifier = modifier,
+            //in the announcements channel page, we can navigate to two other pages
+            //the first is when you click on a channel, it will show the logs of announcements
+            //the second is to open the manage subscriptions page which shows all the announcement channels
+            //and allows users to subscribe and unsubscribe to them
             navigateToAnnouncementPage = navigateToAnnouncementPage,
             navigateToManageSubscriptions = navigateToManageSubscriptions
         )

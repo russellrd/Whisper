@@ -30,9 +30,6 @@ fun ManageSubscriptionsScreen(
             .fillMaxSize()
             .padding(10.dp)
     ) {
-        AllAnnouncementChannelList(
-            modifier = modifier,
-            navigateToAnnouncementPage = navigateToAnnouncementPage,
-        )
+        AllAnnouncementChannelList(modifier = modifier)
     }
 }
