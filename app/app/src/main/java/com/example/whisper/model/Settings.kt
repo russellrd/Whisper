@@ -4,6 +4,7 @@ data class Settings(
     val theme: Theme = Theme.LIGHT
 )
 
+// Enumerate available languages in the settings
 enum class Language(val displayName: String, val code: String) {
     ENGLISH("English", "en"),
     TAGALOG("Tagalog", "tl");
@@ -24,6 +25,7 @@ enum class Language(val displayName: String, val code: String) {
     }
 }
 
+// Enumerate available themes in the settings
 enum class Theme(val displayName: String) {
     LIGHT("Light"),
     DARK("Dark"),
