@@ -39,6 +39,7 @@ import com.example.whisper.model.UserAuth
 import com.example.whisper.view_model.AnnouncementChannelViewModel
 import com.example.whisper.view_model.AuthState
 
+//this shows only the list of announcements channels that the user is subscribed to
 @Composable
 fun AnnouncementChannelList(
     viewModel: AnnouncementChannelViewModel = AnnouncementChannelViewModel(),
@@ -121,7 +122,6 @@ private fun ManageSubscriptionButton(
     modifier: Modifier = Modifier,
     navigateToManageSubscriptions: () -> Unit
 ) {
-    var nameSearch by remember { mutableStateOf("") }
 
     Box(
         modifier = modifier
