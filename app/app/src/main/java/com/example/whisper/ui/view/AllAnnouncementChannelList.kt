@@ -58,37 +58,6 @@ fun AllAnnouncementChannelList(
     )
 }
 
-
-//@SuppressLint("UnrememberedMutableState")
-//@Composable
-//@Preview
-//private fun AnnouncementChannelListPreview(
-//    modifier: Modifier = Modifier
-//) {
-//    val data: MutableState<AnnouncementChannelRepositories> =
-//    mutableStateOf(
-//        AnnouncementChannelRepositories(
-//            data = listOf()
-//        )
-//    )
-//
-//    data.value = AnnouncementChannelRepositories(
-//        data = listOf(
-//            AnnouncementChannel("0", "Cool Page", "Wawdawd"),
-//            AnnouncementChannel("1", "Special", "WDAWDAWDWAWA"),
-//            AnnouncementChannel("2", "Tuvok's Words-o-Wisdom", "Awdawd")
-//        )
-//    )
-//
-//    val value by remember { data }
-//
-//    AnnouncementChannelListBody(
-//        value = value,
-//        navigateToAnnouncement = navigateToAnnouncement,
-//        modifier = modifier
-//    )
-//}
-
 @Composable
 private fun AllAnnouncementChannelListBody(
     value: AnnouncementChannelRepositories,
