@@ -33,6 +33,8 @@ import com.example.whisper.navigation.WhisperNavHost
 
 @Composable
 fun WhisperApp(appState: WhisperAppState) {
+    // Main scaffold for app
+    // Includes a tob bar, bottom bar, and the nav host for page content
     Scaffold(
         containerColor = Color.Transparent,
         contentColor = MaterialTheme.colorScheme.onBackground,
@@ -73,6 +75,7 @@ private fun WhisperTopBar(
     navUp: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    // Top bar to be used in main app
     TopAppBar(
         title = { if(currentDestination != null) Text(stringResource(currentDestination.destinationNameId)) else Text("None") },
         colors = TopAppBarDefaults.mediumTopAppBarColors(
@@ -98,6 +101,7 @@ private fun BottomNavigation(
     onNavigateToDestination: (TabDestination) -> Unit,
     currentDestination: NavDestination?
 ) {
+    // Bottom bar to be used in main app
     NavigationBar {
         destinations.forEach { destination ->
             AddItem(
@@ -115,6 +119,7 @@ fun RowScope.AddItem(
     onNavigateToDestination: (TabDestination) -> Unit,
     currentDestination: NavDestination?
 ) {
+    // Individual bottom navigation item
     val selected = currentDestination.isTabDestination(destination)
     NavigationBarItem(
         selected = true,

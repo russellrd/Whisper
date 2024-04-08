@@ -49,7 +49,7 @@ fun MessageChannelList(
     modifier: Modifier = Modifier
 ) {
     val value by remember { mcViewModel.repositories }
-    val auth: Auth by authViewModel.auth.collectAsStateWithLifecycle()
+    val auth: Auth by authViewModel.auth.collectAsStateWithLifecycle() // Create authentication object reference for API calls 
 
     LaunchedEffect(key1 = Unit) {
 

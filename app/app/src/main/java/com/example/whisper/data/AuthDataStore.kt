@@ -16,6 +16,7 @@ const val AUTH_DATASTORE = "auth_datastore"
 private val Context.authDataStore: DataStore<Preferences> by preferencesDataStore(name = AUTH_DATASTORE)
 
 class AuthDataStore(private val context: Context) {
+    // Initialize preferences to be saved
     companion object {
         val IS_LOGGED_IN = booleanPreferencesKey("IS_LOGGED_IN")
         var ID = stringPreferencesKey("ID")
@@ -23,6 +24,7 @@ class AuthDataStore(private val context: Context) {
         var TGT = stringPreferencesKey("TGT")
     }
 
+    // Save auth data and set logged in to true
     suspend fun login(auth: Auth) {
         context.authDataStore.edit {
             it[IS_LOGGED_IN] = true
@@ -32,11 +34,13 @@ class AuthDataStore(private val context: Context) {
         }
     }
 
+    // Clear auth data and set logged in to false
     suspend fun logout() = context.authDataStore.edit {
         it.clear()
         it[IS_LOGGED_IN] = false
     }
 
+    // Get auth data as flow
     fun getAuth(): Flow<Auth> = context.authDataStore.data.map {
         Auth(
             id = it[ID]?:"",
@@ -45,6 +49,7 @@ class AuthDataStore(private val context: Context) {
         )
     }
 
+    // Get is logged in as flow
     fun isLoggedIn(): Flow<Boolean> = context.authDataStore.data.map {
         return@map it[IS_LOGGED_IN] ?: false
     }

@@ -30,6 +30,7 @@ private const val IV_SIZE = 16
 
 private const val DESIRED_LIFETIME: Long = 1
 
+// Outline possible app roles
 enum class Role(val value: Int) {
     USER(1),
     TEAMLEAD(2),
@@ -38,6 +39,7 @@ enum class Role(val value: Int) {
 
 class CryptoSystem {
     companion object {
+        // AES encrypt a string with a key
         fun encryptJSON(unencryptedString: String, key: String): String {
             val initializationVector = Random.Default.nextBytes(ByteArray(IV_SIZE))
             val iv = IvParameterSpec(initializationVector)
@@ -51,6 +53,7 @@ class CryptoSystem {
             return Base64.getEncoder().encodeToString(encryptedString)
         }
 
+        // AES decrypt a string with a key
         fun decryptJSON(encryptedString: String, key: String): String {
             val b64Decoded = Base64.getDecoder().decode(encryptedString)
             val iv = IvParameterSpec(b64Decoded.copyOfRange(0, IV_SIZE))
@@ -62,7 +65,9 @@ class CryptoSystem {
             return String(json, StandardCharsets.UTF_8)
         }
 
+        // Authenticate user by reaching ticket granting server and service server
         fun authenticate(auth: Auth, role: Role, logout: () -> Unit): Boolean {
+            // Create a user auth message for ticket granting server
             val userAuth = UserAuth(
                 auth.id,
                 ZonedDateTime.now().format(DateTimeFormatter.ISO_INSTANT)
@@ -72,6 +77,7 @@ class CryptoSystem {
             val userAuthJSON = Json.encodeToString(userAuth)
             val userAuthString = encryptJSON(userAuthJSON, auth.tgsSessionKey)
 
+            // Create a request for ticket granting server with a desired lifetime in hours
             val tgsRequest = TGSRequest(
                 role.value.toString(),
                 ZonedDateTime.now().plusHours(DESIRED_LIFETIME).format(DateTimeFormatter.ISO_INSTANT),
@@ -79,55 +85,59 @@ class CryptoSystem {
                 auth.tgt
             )
 
+            // Create body and header for HTTP request
             val body = Json.encodeToString(tgsRequest)
             val header: HashMap<String, String> = hashMapOf("Content-Type" to "application/json")
 
+            // Make POST request to ticket granting server
             Fuel.post("http://10.0.2.2:4321/auth/tgs").body(body).header(header).responseJson{ _, _, result ->
                 Log.d(TAG, result.toString())
                 when(result){
-                    is Result.Failure -> {
-                        val ex = result.getException()
-                    }
+                    is Result.Failure -> {}
 
                     is Result.Success -> {
                         try {
+                            // Try to parse and decrypt response using tgs session key
                             val encryptedResponse = Json.decodeFromString<TGSEncryptedResponse>(result.get().obj().toString())
                             val tgsResponseJSON = decryptJSON(encryptedResponse.tgsResponse, auth.tgsSessionKey)
                             val tgsResponse = Json.decodeFromString<TGSResponse>(tgsResponseJSON)
 
+                            // Create new user auth for service server
                             val userAuth2 = UserAuth(
                                 auth.id,
                                 ZonedDateTime.now().format(DateTimeFormatter.ISO_INSTANT)
                             )
 
-                            // Encrypt UserAuth
+                            // Encrypt new UserAuth
                             val userAuthJSON2 = Json.encodeToString(userAuth2)
                             val userAuthString2 = encryptJSON(userAuthJSON2, tgsResponse.serviceSessionKey)
 
+                            // Create a request for service server
                             val ssRequest = SSRequest(
                                 userAuthString2,
                                 encryptedResponse.st
                             )
 
+                            // Create body and header for HTTP request
                             val body2 = Json.encodeToString(ssRequest)
                             val header2: HashMap<String, String> = hashMapOf("Content-Type" to "application/json")
 
+                            // Make POST request to service server
                             Fuel.post("http://10.0.2.2:4321/auth/ss").body(body2).header(header2).responseJson { _, _, result ->
                                 Log.d(TAG, result.toString())
                                 when (result) {
-                                    is Result.Failure -> {
-                                        val ex = result.getException()
-                                    }
+                                    is Result.Failure -> {}
 
                                     is Result.Success -> {
+                                        // Try to parse and decrypt response using service session key
                                         val encryptedResponse2 = Json.decodeFromString<SSEncryptedResponse>(result.get().obj().toString())
                                         val serviceAuthJSON = decryptJSON(encryptedResponse2.serviceAuth, tgsResponse.serviceSessionKey)
                                         val serviceAuth = Json.decodeFromString<ServiceAuth>(serviceAuthJSON)
-                                        Log.d(TAG, serviceAuth.serviceId)
                                     }
                                 }
                             }
                         } catch (e: Exception) {
+                            // Logout if ticket granting ticket is expired
                             logout()
                         }
                     }

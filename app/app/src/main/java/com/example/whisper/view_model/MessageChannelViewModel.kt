@@ -15,7 +15,7 @@ import kotlinx.serialization.encodeToString
 
 private const val TAG = "MessageChannelViewModel"
 
-class MessageChannelViewModel { // I feel like this class can be abstracted to since the view model is the only thing that changes - Kalp
+class MessageChannelViewModel { 
     private val _repositories: MutableState<MessageChannelRepositories> = mutableStateOf(
         MessageChannelRepositories(
             data = listOf()
@@ -34,6 +34,7 @@ class MessageChannelViewModel { // I feel like this class can be abstracted to s
         Fuel.get("http://10.0.2.2:4321/messageChannel/getCurrentChats?id=$userID").header(header).responseJson{ _, _, result ->
             Log.d(TAG, result.toString())
             when(result) {
+                // Return an error if the database call was not successful 
                 is Result.Failure -> {
                     val ex = result.getException()
                     if(ex.response.statusCode == 404){
@@ -41,7 +42,8 @@ class MessageChannelViewModel { // I feel like this class can be abstracted to s
                         _repositories.value = tmp
                     }
                 }
-
+                
+                // Update the repository data if the request was sucessful
                 is Result.Success -> {
                     val tmp = Json.decodeFromString<MessageChannelRepositories>(result.get().obj().toString())
                     _repositories.value = tmp

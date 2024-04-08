@@ -8,8 +8,8 @@ auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
 @auth_bp.route("/tgs", methods=["POST"])
 def get_ST():
     TGS_request = TGSRequest(**request.get_json())
-    TGS_responsse = TicketGrantingServer().get_ST(TGS_request)
-    return jsonify(TGS_responsse)
+    TGS_response = TicketGrantingServer().get_ST(TGS_request)
+    return jsonify(TGS_response)
 
 @auth_bp.route("/ss", methods=["POST"])
 def get_SA():
