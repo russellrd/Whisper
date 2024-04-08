@@ -40,7 +40,7 @@ class MessageChannelViewModel {
                     }
                 }
                 
-                Update the repository data if the request was sucessful 
+                // Update the repository data if the request was sucessful
                 is Result.Success -> {
                     val tmp = Json.decodeFromString<MessageChannelRepositories>(result.get().obj().toString())
                     _repositories.value = tmp

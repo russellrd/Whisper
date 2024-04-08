@@ -16,6 +16,7 @@ captures/
 .externalNativeBuild/
 .cxx/
 *.apk
+!Whisper.apk
 output.json
 
 # IntelliJ
