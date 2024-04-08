@@ -1,5 +1,15 @@
 Whisper Chat Application 
 
+In order to start the backend server locally (must be done before .apk file is started):
+	1. Open a CMD / Terminal to the project directory 
+	2. Navigate into the backend directory 
+	3. Install any requirements for the application 
+		- `pip3 install -r requirement.txt`
+	3. Run the python `app.py` file 
+		- This is usually done through `python3 app.py`
+		- The program should say that it is running on localhost port 4321
+			- localhost:4321
+
 In order to run the Whisper chat application .apk file: 
 	1. Start Android Studio to the Home page
 	2. Click on the Virtual Device Manager 
